@@ -427,17 +427,17 @@ class WorldController extends Controller
         // search items
         $results->push(Item::where('name', 'LIKE', '%'.$query.'%')->orWhere('description', 'LIKE', '%'.$query.'%')->get());
         $results->push(ItemCategory::where('name', 'LIKE', '%'.$query.'%')->orWhere('description', 'LIKE', '%'.$query.'%')->get());
-        // $results['currencies'] = Currency::where('name', 'LIKE', '%'.$query.'%')->orWhere('description', 'LIKE', '%'.$query.'%')->get();
-        // // search prompts
-        // $results['prompts'] = Prompt::where('name', 'LIKE', '%'.$query.'%')->orWhere('description', 'LIKE', '%'.$query.'%')->get();
-        // $results['prompt_categories'] = PromptCategory::where('name', 'LIKE', '%'.$query.'%')->orWhere('description', 'LIKE', '%'.$query.'%')->get();
-        // // search site pages and news
-        // $results['site_pages'] = SitePage::where('title', 'LIKE', '%'.$query.'%')->orWhere('text', 'LIKE', '%'.$query.'%')->get();
-        // $results['news'] = News::where('title', 'LIKE', '%'.$query.'%')->orWhere('text', 'LIKE', '%'.$query.'%')->get();
+        $results->push(Currency::where('name', 'LIKE', '%'.$query.'%')->orWhere('description', 'LIKE', '%'.$query.'%')->get());
+        // search prompts
+        $results->push(Prompt::where('name', 'LIKE', '%'.$query.'%')->orWhere('description', 'LIKE', '%'.$query.'%')->get());
+        $results->push(PromptCategory::where('name', 'LIKE', '%'.$query.'%')->orWhere('description', 'LIKE', '%'.$query.'%')->get());
+        // search site pages and news
+        $results->push(SitePage::where('title', 'LIKE', '%'.$query.'%')->orWhere('text', 'LIKE', '%'.$query.'%')->get());
+        $results->push(News::where('title', 'LIKE', '%'.$query.'%')->orWhere('text', 'LIKE', '%'.$query.'%')->get());
 
-        // return view('browse._search_query', [
-        //     'results' => $results
-        // ]);
+        return view('browse._search_query', [
+            'results' => $results
+        ]);
 
         return response()->json([
             'status' => 'success',
