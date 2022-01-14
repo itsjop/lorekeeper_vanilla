@@ -435,10 +435,6 @@ class WorldController extends Controller
         $results->push(SitePage::where('title', 'LIKE', '%'.$query.'%')->orWhere('text', 'LIKE', '%'.$query.'%')->get());
         $results->push(News::where('title', 'LIKE', '%'.$query.'%')->orWhere('text', 'LIKE', '%'.$query.'%')->get());
 
-        return view('browse._search_query', [
-            'results' => $results
-        ]);
-
         return response()->json([
             'status' => 'success',
             'results' => view('browse._search_query', [
