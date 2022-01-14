@@ -425,15 +425,15 @@ class WorldController extends Controller
         $results->push(Species::where('name', 'LIKE', '%'.$query.'%')->orWhere('description', 'LIKE', '%'.$query.'%')->get());
         $results->push(Subtype::where('name', 'LIKE', '%'.$query.'%')->orWhere('description', 'LIKE', '%'.$query.'%')->get());
         // search items
-        $results->push(Item::where('name', 'LIKE', '%'.$query.'%')->orWhere('description', 'LIKE', '%'.$query.'%')->get());
+        $results->push(Item::released()->where('name', 'LIKE', '%'.$query.'%')->orWhere('description', 'LIKE', '%'.$query.'%')->get());
         $results->push(ItemCategory::where('name', 'LIKE', '%'.$query.'%')->orWhere('description', 'LIKE', '%'.$query.'%')->get());
         $results->push(Currency::where('name', 'LIKE', '%'.$query.'%')->orWhere('description', 'LIKE', '%'.$query.'%')->get());
         // search prompts
-        $results->push(Prompt::where('name', 'LIKE', '%'.$query.'%')->orWhere('description', 'LIKE', '%'.$query.'%')->get());
+        $results->push(Prompt::active()->where('name', 'LIKE', '%'.$query.'%')->orWhere('description', 'LIKE', '%'.$query.'%')->get());
         $results->push(PromptCategory::where('name', 'LIKE', '%'.$query.'%')->orWhere('description', 'LIKE', '%'.$query.'%')->get());
         // search site pages and news
-        $results->push(SitePage::where('title', 'LIKE', '%'.$query.'%')->orWhere('text', 'LIKE', '%'.$query.'%')->get());
-        $results->push(News::where('title', 'LIKE', '%'.$query.'%')->orWhere('text', 'LIKE', '%'.$query.'%')->get());
+        $results->push(SitePage::where('is_visible', 1)->where('title', 'LIKE', '%'.$query.'%')->orWhere('text', 'LIKE', '%'.$query.'%')->get());
+        $results->push(News::visible()->where('title', 'LIKE', '%'.$query.'%')->orWhere('text', 'LIKE', '%'.$query.'%')->get());
 
         return response()->json([
             'status' => 'success',
