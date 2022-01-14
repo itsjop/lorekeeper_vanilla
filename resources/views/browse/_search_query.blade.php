@@ -1,6 +1,6 @@
 @foreach($results as $key => $items)
     @if(count($items) > 0)
-    <div class="card p-2">
+    <div class="card p-2 my-2">
         <div class="card-header mb-0">
             <h3 class="card-title">{{ ucwords(str_replace('_', ' ', class_basename($items->first()))) }}</h3>
         </div>
