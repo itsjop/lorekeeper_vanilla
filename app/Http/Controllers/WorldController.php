@@ -20,6 +20,9 @@ use App\Models\Shop\Shop;
 use App\Models\Shop\ShopStock;
 use App\Models\User\User;
 
+use App\Models\SitePage;
+use App\Models\News;
+
 class WorldController extends Controller
 {
     /*
@@ -388,6 +391,59 @@ class WorldController extends Controller
         return view('world.prompts', [
             'prompts' => $query->paginate(20)->appends($request->query()),
             'categories' => ['none' => 'Any Category'] + PromptCategory::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray()
+        ]);
+    }
+
+    /*********************************************************************
+     * SITE SEARCH
+     *********************************************************************/
+    
+    /**
+     * Searches the whole site for any matching keywords
+     * 
+     * This is a very intensive search. It will search all items, traits, and
+     * other content on the site.
+     */
+    public function getSiteSearch(Request $request)
+    {
+        return view('browse.search');
+    }
+
+    /**
+     * Searches the whole site for any matching keywords
+     */
+    public function postSiteSearch(Request $request, $query)
+    {
+        $query = $query ?: $request->get('query');
+        if(!$query) return redirect()->to('search');
+
+        // search following tables
+        $results = collect();
+        // search traits
+        $results->push(Feature::where('name', 'LIKE', '%'.$query.'%')->orWhere('description', 'LIKE', '%'.$query.'%')->get());
+        $results->push(FeatureCategory::where('name', 'LIKE', '%'.$query.'%')->orWhere('description', 'LIKE', '%'.$query.'%')->get());
+        $results->push(Species::where('name', 'LIKE', '%'.$query.'%')->orWhere('description', 'LIKE', '%'.$query.'%')->get());
+        $results->push(Subtype::where('name', 'LIKE', '%'.$query.'%')->orWhere('description', 'LIKE', '%'.$query.'%')->get());
+        // search items
+        $results->push(Item::where('name', 'LIKE', '%'.$query.'%')->orWhere('description', 'LIKE', '%'.$query.'%')->get());
+        $results->push(ItemCategory::where('name', 'LIKE', '%'.$query.'%')->orWhere('description', 'LIKE', '%'.$query.'%')->get());
+        // $results['currencies'] = Currency::where('name', 'LIKE', '%'.$query.'%')->orWhere('description', 'LIKE', '%'.$query.'%')->get();
+        // // search prompts
+        // $results['prompts'] = Prompt::where('name', 'LIKE', '%'.$query.'%')->orWhere('description', 'LIKE', '%'.$query.'%')->get();
+        // $results['prompt_categories'] = PromptCategory::where('name', 'LIKE', '%'.$query.'%')->orWhere('description', 'LIKE', '%'.$query.'%')->get();
+        // // search site pages and news
+        // $results['site_pages'] = SitePage::where('title', 'LIKE', '%'.$query.'%')->orWhere('text', 'LIKE', '%'.$query.'%')->get();
+        // $results['news'] = News::where('title', 'LIKE', '%'.$query.'%')->orWhere('text', 'LIKE', '%'.$query.'%')->get();
+
+        // return view('browse._search_query', [
+        //     'results' => $results
+        // ]);
+
+        return response()->json([
+            'status' => 'success',
+            'results' => view('browse._search_query', [
+                'results' => $results
+            ])->render()
         ]);
     }
 }
