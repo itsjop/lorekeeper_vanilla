@@ -321,4 +321,33 @@ class BorderController extends Controller
         return redirect()->back();
     }
 
+
+    /**********************************************************************************************
+
+    ETC
+
+     **********************************************************************************************/
+
+     /**
+     * Creates or edits a border item.
+     *
+     * @param App\Services\BorderService $service
+     * @param int|null                   $id
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function postCreateItem(Request $request, BorderService $service, $id) {
+        if ($item = $service->createItem(Border::find($id), Auth::user())) {
+            flash('Border item created successfully.')->success();
+
+            return redirect()->to('admin/data/items/edit/'.$item->id);
+        } else {
+            foreach ($service->errors()->getMessages()['error'] as $error) {
+                flash($error)->error();
+            }
+        }
+
+        return redirect()->back();
+    }
+
 }

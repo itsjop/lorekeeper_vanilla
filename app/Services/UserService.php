@@ -419,7 +419,13 @@ class UserService extends Service
             $user->border_variant_id = $data['border_variant_id'];
             $user->bottom_border_id = $data['bottom_border_id'];
             $user->top_border_id = $data['top_border_id'];
+
             $user->save();
+
+            $user->settings->border_settings = [
+                'border_flip'                  => $data['border_flip'] ?? 0,
+            ];
+            $user->settings->save();
 
             return $this->commitReturn(true);
         } catch (\Exception $e) {

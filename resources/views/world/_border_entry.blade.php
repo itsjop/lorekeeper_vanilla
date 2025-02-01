@@ -60,6 +60,11 @@
                         <p><strong>Artist:</strong> {!! $border->borderArtist !!}</p>
                     </div>
                 @endif
+                @if ($border->hasItem())
+                    <div class="col-md">
+                        <p><strong>Obtained From:</strong> {!! $border->borderItem()->displayName !!}</p>
+                    </div>
+                @endif
             </div>
             {!! $border->parsed_description !!}
             <div class="container mt-2">

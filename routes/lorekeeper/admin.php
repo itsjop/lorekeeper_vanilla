@@ -236,7 +236,7 @@ Route::group(['prefix' => 'data', 'namespace' => 'Data', 'middleware' => 'power:
      Route::post('border-categories/edit/{id?}', 'BorderController@postCreateEditBorderCategory');
      Route::post('border-categories/delete/{id}', 'BorderController@postDeleteBorderCategory');
      Route::post('border-categories/sort', 'BorderController@postSortBorderCategory');
- 
+
      Route::get('borders', 'BorderController@getBorderIndex');
      Route::get('borders/create', 'BorderController@getCreateBorder');
      Route::get('borders/edit/{id}', 'BorderController@getEditBorder');
@@ -249,6 +249,8 @@ Route::group(['prefix' => 'data', 'namespace' => 'Data', 'middleware' => 'power:
     Route::get('borders/edit/{border_id}/{type}s/edit/{id}', 'BorderController@getCreateEditVariant');
     Route::post('borders/edit/{border_id}/{type}s/create', 'BorderController@postCreateEditVariant');
     Route::post('borders/edit/{border_id}/{type}s/edit/{id}', 'BorderController@postCreateEditVariant');
+
+    Route::post('borders/item/{id}', 'BorderController@postCreateItem');
 });
 
 

@@ -1,12 +1,16 @@
-<?php namespace App\Services;
+<?php
+namespace App\Services;
 
 use App\Models\Border\Border;
 use App\Models\Border\BorderCategory;
+use App\Models\Item\Item;
+use App\Models\Item\ItemTag;
 use App\Models\User\User;
 use App\Models\User\UserBorder;
 use App\Services\Service;
 use Carbon\Carbon;
 use DB;
+use Image;
 use Notifications;
 
 class BorderService extends Service
@@ -44,7 +48,7 @@ class BorderService extends Service
             $image = null;
             if (isset($data['image']) && $data['image']) {
                 $data['has_image'] = 1;
-                $image = $data['image'];
+                $image             = $data['image'];
                 unset($data['image']);
             } else {
                 $data['has_image'] = 0;
@@ -86,7 +90,7 @@ class BorderService extends Service
             $image = null;
             if (isset($data['image']) && $data['image']) {
                 $data['has_image'] = 1;
-                $image = $data['image'];
+                $image             = $data['image'];
                 unset($data['image']);
             }
 
@@ -205,7 +209,7 @@ class BorderService extends Service
                 $data['border_category_id'] = null;
             }
 
-            if ((isset($data['border_category_id']) && $data['border_category_id']) && !BorderCategory::where('id', $data['border_category_id'])->exists()) {
+            if ((isset($data['border_category_id']) && $data['border_category_id']) && ! BorderCategory::where('id', $data['border_category_id'])->exists()) {
                 throw new \Exception("The selected border category is invalid.");
             }
 
@@ -215,9 +219,8 @@ class BorderService extends Service
                 unset($data['image']);
             }
 
-
             $data = $this->populateData($data);
-            
+
             $border = Border::create($data);
 
             if ($image) {
@@ -253,7 +256,7 @@ class BorderService extends Service
                 throw new \Exception("The name has already been taken.");
             }
 
-            if ((isset($data['border_category_id']) && $data['border_category_id']) && !BorderCategory::where('id', $data['border_category_id'])->exists()) {
+            if ((isset($data['border_category_id']) && $data['border_category_id']) && ! BorderCategory::where('id', $data['border_category_id'])->exists()) {
                 throw new \Exception("The selected border category is invalid.");
             }
 
@@ -297,15 +300,15 @@ class BorderService extends Service
         }
 
         // Check toggle
-        if (!isset($data['is_default'])) {
+        if (! isset($data['is_default'])) {
             $data['is_default'] = 0;
         }
 
-        if (!isset($data['is_active'])) {
+        if (! isset($data['is_active'])) {
             $data['is_active'] = 0;
         }
 
-        if (!isset($data['admin_only'])) {
+        if (! isset($data['admin_only'])) {
             $data['admin_only'] = 0;
         }
 
@@ -372,7 +375,7 @@ class BorderService extends Service
 
             // Process borders
             $borders = Border::find($data['border_ids']);
-            if (!$borders) {
+            if (! $borders) {
                 throw new \Exception("Invalid borders selected.");
             }
 
@@ -380,9 +383,9 @@ class BorderService extends Service
                 foreach ($borders as $border) {
                     if ($this->creditBorder($staff, $user, null, 'Staff Grant', array_only($data, ['data']), $border)) {
                         Notifications::create('BORDER_GRANT', $user, [
-                            'border_name' => $border->name,
-                            'sender_url' => $staff->url,
-                            'sender_name' => $staff->name,
+                            'border_name'    => $border->name,
+                            'sender_url'     => $staff->url,
+                            'sender_name'    => $staff->name,
                             'recipient_name' => $user->name,
                         ]);
                     } else {
@@ -432,7 +435,7 @@ class BorderService extends Service
                 $record = UserBorder::create(['user_id' => $recipient->id, 'border_id' => $border->id]);
             }
 
-            if ($type && !$this->createLog($sender ? $sender->id : null, $recipient ? $recipient->id : null,
+            if ($type && ! $this->createLog($sender ? $sender->id : null, $recipient ? $recipient->id : null,
                 $character ? $character->id : null, $type, $data['data'], $border->id)) {
                 throw new \Exception("Failed to create log.");
             }
@@ -461,15 +464,15 @@ class BorderService extends Service
     {
         return DB::table('user_borders_log')->insert(
             [
-                'sender_id' => $senderId,
+                'sender_id'    => $senderId,
                 'recipient_id' => $recipientId,
                 'character_id' => $characterId,
-                'border_id' => $borderId,
-                'log' => $type . ($data ? ' (' . $data . ')' : ''),
-                'log_type' => $type,
-                'data' => $data, // this should be just a string
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
+                'border_id'    => $borderId,
+                'log'          => $type . ($data ? ' (' . $data . ')' : ''),
+                'log_type'     => $type,
+                'data'         => $data, // this should be just a string
+                'created_at'   => Carbon::now(),
+                'updated_at'   => Carbon::now(),
             ]
         );
     }
@@ -502,7 +505,7 @@ class BorderService extends Service
                 unset($data['image']);
             }
 
-            $data['parent_id'] = $border->id;
+            $data['parent_id']   = $border->id;
             $data['border_type'] = $type;
 
             $data = $this->populateData($data);
@@ -553,15 +556,15 @@ class BorderService extends Service
 
             $variant->update($data);
 
-            if($type == 'top'){
+            if ($type == 'top') {
                 $check = 'top_border_id';
-                $name = 'Top Layer';
-            }elseif($type == 'bottom'){
+                $name  = 'Top Layer';
+            } elseif ($type == 'bottom') {
                 $check = 'bottom_border_id';
-                $name = 'Bottom Layer';
-            }else{
+                $name  = 'Bottom Layer';
+            } else {
                 $check = 'border_variant_id';
-                $name = 'Variant';
+                $name  = 'Variant';
             }
 
             if (isset($data['delete']) && $data['delete']) {
@@ -574,12 +577,79 @@ class BorderService extends Service
 
                 $this->deleteImage($variant->imagePath, $variant->imageFileName);
                 $variant->delete();
-                flash($name.' deleted successfully.')->success();
+                flash($name . ' deleted successfully.')->success();
             } else {
-                flash($name.' updated successfully.')->success();
+                flash($name . ' updated successfully.')->success();
             }
 
             return $this->commitReturn(true);
+        } catch (\Exception $e) {
+            $this->setError('error', $e->getMessage());
+        }
+
+        return $this->rollbackReturn(false);
+    }
+
+    /**********************************************************************************************
+
+    ETC
+
+     **********************************************************************************************/
+
+    /**
+     * Create an associated item for a border
+     *
+     * @param mixed $border
+     * @param mixed $user
+     *
+     * @return bool
+     */
+    public function createItem($border, $user)
+    {
+        DB::beginTransaction();
+
+        try {
+            //set the data to make the item....
+            $data['name'] = $border->name . ' Border';
+            $data['has_image'] = 1;
+
+            // $data['hash'] = randomString(10);
+
+            $image = Image::make($border->imagePath . '/' . $border->imageFileName);
+
+            /* you can set some default data here, if desired
+                $data['item_category_id'] = 1;
+                $data['allow_transfer'] = 1;
+                $data['is_released'] = 0;
+            */
+
+            //same with here, let's just nullify to prevent potential issues
+            $data['data'] = json_encode([
+                'rarity'  => null,
+                'uses'    => null,
+                'release' => null,
+                'prompts' => null,
+                'resell'  => null,
+            ]);
+
+            $item = Item::create($data);
+
+            /*
+                if (!$this->logAdminAction($user, 'Created Item', 'Created '.$item->displayName)) {
+                    throw new \Exception('Failed to log admin action.');
+                }
+            */
+
+            $image->save($item->imagePath . '/' . $item->imageFileName, 100, 'png');
+
+            $tag = ItemTag::create([
+                'item_id'   => $item->id,
+                'tag'       => 'border',
+                'is_active' => 1,
+                'data'      => '{"borders":{"' . $border->id . '":1}}',
+            ]);
+
+            return $this->commitReturn($item);
         } catch (\Exception $e) {
             $this->setError('error', $e->getMessage());
         }

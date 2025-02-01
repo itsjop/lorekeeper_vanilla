@@ -41,8 +41,9 @@
             <div class="d-flex row flex-wrap col-12 pb-1 px-0 ubt-bottom">
                 <div class="col-3 col-md-4 font-weight-bold">Name</div>
                 <div class="col-3 col-md-2 font-weight-bold">Border Style</div>
-                <div class="col-3 col-md-2 font-weight-bold">Is Default?</div>
-                <div class="col-3 col-md-2 font-weight-bold">Staff Only?</div>
+                <div class="col-3 col-md-1 font-weight-bold">Is Default?</div>
+                <div class="col-3 col-md-1 font-weight-bold">Staff Only?</div>
+                <div class="col-3 col-md-2 font-weight-bold">Item?</div>
             </div>
             @foreach ($borders as $border)
                 <div class="d-flex row flex-wrap col-12 mt-1 pt-2 px-0 ubt-top">
@@ -52,11 +53,11 @@
                         @endif
                     </div>
                     <div class="col-3 col-md-2"> {!! $border->border_style ? 'Over' : 'Under' !!} </div>
-                    <div class="col-3 col-md-2"> {!! $border->is_default ? '<i class="text-success fas fa-check"></i>' : '-' !!} </div>
-                    <div class="col-3 col-md-2"> {!! $border->admin_only ? '<i class="text-success fas fa-check"></i>' : '-' !!} </div>
+                    <div class="col-3 col-md-1"> {!! $border->is_default ? '<i class="text-success fas fa-check"></i>' : '-' !!} </div>
+                    <div class="col-3 col-md-1"> {!! $border->admin_only ? '<i class="text-success fas fa-check"></i>' : '-' !!} </div>
+                    <div class="col-3 col-md-2"> {!! $border->hasItem() ? $border->borderItem()->displayName : '-' !!} </div>
                     <div class="col col-md text-right">
-                        <a href="{{ url('admin/data/borders/edit/' . $border->id) }}"
-                            class="btn btn-primary py-0 px-2">Edit</a>
+                        <a href="{{ url('admin/data/borders/edit/' . $border->id) }}" class="btn btn-primary py-0 px-2">Edit</a>
                     </div>
                 </div>
             @endforeach

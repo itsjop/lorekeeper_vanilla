@@ -65,7 +65,8 @@
 
         <div class="col-md-6">
             <h3>Image</h3>
-            <p><b>An image is required. You can't have a border with no image!</b> A square canvas is recommended. The container that contains the avatar and borders has a max-width set of 150px, while the avatar itself is resized down to around 120px. This can be adjusted in the CSS.</p>
+            <p><b>An image is required. You can't have a border with no image!</b> A square canvas is recommended. The container that contains the avatar and borders has a max-width set of 150px, while the avatar itself is resized down to around 120px.
+                This can be adjusted in the CSS.</p>
 
             <div class="form-group">
                 {!! Form::label('image', 'Border Image', ['class' => 'font-weight-bold']) !!}
@@ -190,7 +191,6 @@
                 </div>
             </div>
         </div>
-        <hr />
         <div class="card mb-3 p-4">
             <h2>Variants</h2>
             <p>These are the variations for this border. A user that owns this base border can switch between its variants for free.</p>
@@ -218,7 +218,21 @@
                 </div>
             </div>
         </div>
-
+        <div class="card mb-3 p-4">
+            <h2>Create Item</h2>
+            <p>This will create a corresponding item (with an attached item tag) that a user can activate and obtain this border.</p>
+            <p>This will only check if an item tag can unlock this specific border ONLY.</p>
+            @if (!$border->hasItem())
+                {!! Form::open([
+                    'url' => 'admin/data/borders/item/' . $border->id,
+                ]) !!}
+                {!! Form::submit('Create Item', ['class' => 'btn btn-primary']) !!}
+                {!! Form::close() !!}
+            @else
+                <div class="alert alert-danger">This border already has an item.</div>
+            @endif
+        </div>
+        <hr />
         <h3>Preview</h3>
         <div class="card mb-3">
             <div class="card-body">

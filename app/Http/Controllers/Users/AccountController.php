@@ -318,7 +318,7 @@ class AccountController extends Controller
      */
     public function postBorder(Request $request, UserService $service)
     {
-        if ($service->updateBorder($request->only('border', 'border_variant_id', 'bottom_border_id','top_border_id'), Auth::user())) {
+        if ($service->updateBorder($request->only('border', 'border_variant_id', 'bottom_border_id','top_border_id','border_flip'), Auth::user())) {
             flash('Border updated successfully.')->success();
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
@@ -338,10 +338,15 @@ class AccountController extends Controller
     {
         $border = $request->input('border');
 
+        if (Border::where('parent_id', '=', $border)->where('border_type', 'variant')->active(Auth::user() ?? null)->count()) {
+            $border_variants = ['0' => 'Select Border Variant'] + Border::where('parent_id', '=', $border)->where('border_type', 'variant')->active(Auth::user() ?? null)->get()->pluck('settingsName', 'id')
+            ->toArray();
+        }else{
+            $border_variants = ['0' => 'None Available'];
+        }
+
         return view('account.border_variants', [
-            'border_variants' => ['0' => 'Select Border Variant'] + Border::where('parent_id', '=', $border)->where('border_type', 'variant')->active(Auth::user() ?? null)->get()
-            ->pluck('settingsName', 'id')
-            ->toArray(),
+            'border_variants' => $border_variants
         ]);
     }
 
@@ -356,8 +361,8 @@ class AccountController extends Controller
 
         $layeredborder = Border::find($border);
         if (!$layeredborder || !$layeredborder->topLayers()->count() || !$layeredborder->bottomLayers()->count()) {
-            $bottom_layers = ['0' => 'Pick a Border First'];
-            $top_layers = ['0' => 'Pick a Border First'];
+            $bottom_layers = ['0' => 'None Available'];
+            $top_layers = ['0' => 'None Available'];
         }
 
         return view('account.border_layers', [

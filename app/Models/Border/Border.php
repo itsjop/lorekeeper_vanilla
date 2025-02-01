@@ -6,6 +6,7 @@ use App\Models\Border\BorderCategory;
 use App\Models\Model;
 use App\Models\User\User;
 use Auth;
+use App\Models\Item\ItemTag;
 
 class Border extends Model
 {
@@ -413,6 +414,22 @@ class Border extends Model
         } else if ($this->artist_url) {
             return prettyProfileLink($this->artist_url);
         }
+    }
+
+    public function hasItem() {
+        $item = ItemTag::where('tag', 'border')->where('data', '{"borders":{"'.$this->id.'":1}}')->first();
+
+        if ($item) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function borderItem() {
+        $item = ItemTag::where('tag', 'border')->where('data', '{"borders":{"'.$this->id.'":1}}')->first();
+
+        return $item->item;
     }
 
 }

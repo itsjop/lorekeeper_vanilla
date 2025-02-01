@@ -110,19 +110,26 @@
         <p>Standard borders behave as normal. Variants may be different colors or even border styles than the main border. If your chosen main border has a "layer" associated with it, you can layer that image with one of its variant's borders.</p>
         <p>Variants supersede standard borders, and layers supersede variants.</p>
         {!! Form::open(['url' => 'account/border']) !!}
-        <div class="form-group row">
-            <label class="col-md-2 col-form-label">Border</label>
-            <div class="col-md-10">
+        <div class="row">
+            <div class="col-md-6 form-group">
+                {!! Form::label('Border') !!}
                 {!! Form::select('border', $borders, Auth::user()->border_id, ['class' => 'form-control', 'id' => 'border']) !!}
             </div>
-        </div>
-        <div class="form-group row">
-            <label class="col-md-2 col-form-label">Border Variant</label>
-            <div class="col-md-10">
+            <div class="col-md-6 form-group">
+                {!! Form::label('Border Variant') !!}
                 {!! Form::select('border_variant_id', $border_variants, Auth::user()->border_variant_id, ['class' => 'form-control', 'id' => 'bordervariant']) !!}
             </div>
         </div>
         <div id="layers">
+        </div>
+        <h4>Border Style</h4>
+        <h5>Flip</h5>
+        <p>Flip this border (horizontally.)</p>
+        <div class="row">
+            <div class="col-md-6 form-group">
+                {!! Form::checkbox('border_flip', 1, Auth::user()->settings->border_settings['border_flip'] ?? 0, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
+                {!! Form::label('border_flip', 'Flip Border', ['class' => 'form-check-label ml-3']) !!}
+            </div>
         </div>
         <div class="text-right">
             {!! Form::submit('Edit', ['class' => 'btn btn-primary']) !!}
