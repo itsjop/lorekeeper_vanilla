@@ -43,8 +43,12 @@ class change_site_season extends Command
        //change the season
        $updateto = WeatherSeason::whereNotNull('cycle_at')->where('cycle_at', '<', Carbon::now())->whereNotNull('end_at')->where('end_at', '>', Carbon::now())->first();
        
+       if(isset($updateTo)) {
             DB::table('site_settings')->where('key', 'site_season')->update(['value' => $updateto->id]);
             $this->info('Season adjusted successfully.');
+        } else {
+            $this->info('No seasons found!');
+        }
     
     }
 }
