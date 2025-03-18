@@ -45,6 +45,7 @@ class cycle_site_weather extends Command
         $currentweather = Weather::where('id', Settings::get('site_weather'))->first();
         $currentseason = WeatherSeason::where('id', Settings::get('site_season'))->first();
 
+        if(isset($currentseason)) {
         //change the weather
         if(Settings::get('site_weather_cycle') == 0) {
             //no reset setting
@@ -54,10 +55,14 @@ class cycle_site_weather extends Command
         if(Settings::get('site_weather_cycle') == 1) {
             //daily reset
                 $results = [];
-                $results[] = $currentseason->roll(); 
-                $finalweather = array_values($results[0]["weathers"])[0]["asset"]->id;
-            DB::table('site_settings')->where('key', 'site_weather')->update(['value' => $finalweather]);
-            $this->info('Weather adjusted successfully.');
+                $results[] = $currentseason->roll();
+                if(count($results) >= 1) {
+                    $finalweather = array_values($results[0]["weathers"])[0]["asset"]->id;
+                    DB::table('site_settings')->where('key', 'site_weather')->update(['value' => $finalweather]);
+                    $this->info('Weather adjusted successfully.');
+                } else {
+                    $this->info('No valid weather found!');
+                }
         }
         if(Settings::get('site_weather_cycle') == 2) {
             //weekly reset setting
@@ -65,9 +70,13 @@ class cycle_site_weather extends Command
                 $day = $now->dayOfWeek;
                 if($day == 1) { $results = [];
                     $results[] = $currentseason->roll(); 
-                    $finalweather = array_values($results[0]["weathers"])[0]["asset"]->id;
-                DB::table('site_settings')->where('key', 'site_weather')->update(['value' => $finalweather]);
-                $this->info('Weather adjusted successfully.');
+                    if(count($results) >= 1) {
+                        $finalweather = array_values($results[0]["weathers"])[0]["asset"]->id;
+                        DB::table('site_settings')->where('key', 'site_weather')->update(['value' => $finalweather]);
+                        $this->info('Weather adjusted successfully.');
+                    } else {
+                        $this->info('No valid weather found!');
+                    }
                 }
         }
         if(Settings::get('site_weather_cycle') == 3) {
@@ -77,10 +86,17 @@ class cycle_site_weather extends Command
                 if($day == 1) {
                     $results = [];
                     $results[] = $currentseason->roll(); 
+                if(count($results) >= 1) {
                     $finalweather = array_values($results[0]["weathers"])[0]["asset"]->id;
-                DB::table('site_settings')->where('key', 'site_weather')->update(['value' => $finalweather]);
-                $this->info('Weather adjusted successfully.'); 
+                    DB::table('site_settings')->where('key', 'site_weather')->update(['value' => $finalweather]);
+                    $this->info('Weather adjusted successfully.'); 
+                } else {
+                    $this->info('No valid weather found!');
                 }
-        } 
+            }
+        }
+        } else {
+            $this->info('No valid season is set.');
+        }
     }
 }
