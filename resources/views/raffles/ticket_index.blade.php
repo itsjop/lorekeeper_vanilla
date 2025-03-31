@@ -13,7 +13,10 @@
         <div class="card-header h3">Winner(s)</div>
         <div class="table-responsive">
             <table class="table table-sm mb-0">
-                <thead><th class="col-xs-1 text-center" style="width: 100px;">#</th><th>User</th></thead>
+                <thead>
+<th class="col-xs-1 text-center" style="width: 100px;">#</th>
+<th>User</th>
+</thead>
                 <tbody>
                     @foreach($raffle->tickets()->winners()->get() as $winner)
                         <tr>
@@ -29,7 +32,9 @@
 <h3>Tickets</h3>
 
 @if(Auth::check() && count($tickets))
-  <?php $chance = number_format((float)(($userCount/$count)*100), 1, '.', ''); //Change 1 to 0 if you want no decimal place. ?>
+  <?php $chance = number_format((float) (($userCount / $count) * 100), 1, '.', '');
+//Change 1 to 0 if you want no decimal place.
+?>
   <p class="text-center mb-0">You {{ $raffle->is_active == 2 ? 'had' : 'have' }} <strong>{{ $userCount }}</strong> out of <strong>{{ $count }} tickets</strong> in this raffle.</p>
   <p class="text-center"> That's a <strong>{{ $chance }}%</strong> chance! </p>
 @endif
@@ -46,7 +51,8 @@
             <div class="col-2 col-md-1">
               {{ $page * 100 + $count + 1 }}
               @if (Auth::check() && $ticket->user_id && $ticket->user->name == Auth::user()->name)
-                <i class="fas fa-ticket-alt ml-2"></i>
+                <i class="fas fa-ticket-alt ml-2">
+</i>
               @endif
             </div>
             <div class="col-10 col-md-11">{!! $ticket->displayHolderName !!}</div>
