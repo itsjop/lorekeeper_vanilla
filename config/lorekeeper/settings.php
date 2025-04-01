@@ -31,7 +31,7 @@ return [
     | (APP_NAME in .env cannot take spaces). This will be displayed on the
     | site wherever the name needs to be displayed.
     */
-  'site_name' => 'Lorekeeper',
+  'site_name' => 'Somnivores',
 
   /*
     |--------------------------------------------------------------------------
@@ -41,7 +41,7 @@ return [
     | displayed on various social media sites, discord, and the like.
     | It is not, however, displayed on the site itself. This should be kept short and snappy!
     */
-  'site_desc' => 'A Lorekeeper ARPG',
+  'site_desc' => 'Welcome to Somnivores!',
 
   /*
     |--------------------------------------------------------------------------
