@@ -49,7 +49,7 @@
             </td>
             <td>{!! $sublist->show_main
                 ? '<i class="text-success fas fa-check">
-                                                                                                                                                                                                </i>'
+                                                                                                                                                                                                            </i>'
                 : '' !!}</td>
             <td>{!! $sublist->key !!}</td>
             <td class="text-right">
