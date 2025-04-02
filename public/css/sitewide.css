@@ -1,6 +1,8 @@
 @import url("https://fonts.googleapis.com/css2?family=Baloo+2:wght@400..800&display=swap");
 @import "global-vars.css";
 
+/* TODO: Break this up into multiple files */
+
 * {
   box-sizing: border-box;
 }
