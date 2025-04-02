@@ -13,3 +13,4 @@ yarn-error.log
 *.env
 /composer.phar
 /.github
+/public/js

@@ -61,7 +61,7 @@
           <div class="col-2 col-md-1">
             {!! $prompt->is_active
                 ? '<i class="text-success fas fa-check">
-                                                                                                                                                                                                </i>'
+                                                                                                                                                                                                            </i>'
                 : '' !!}
           </div>
           <div class="col-5 col-md-3 text-truncate">

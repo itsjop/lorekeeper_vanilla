@@ -157,7 +157,7 @@ return [
     | This feature will not replace the manual uploading of thumbnails.
     | Simply change to "1" to enable, or keep at "0" to disable.
     */
-  'masterlist_image_automation' => 0,
+  'masterlist_image_automation' => 1,
 
   /*
     |--------------------------------------------------------------------------
