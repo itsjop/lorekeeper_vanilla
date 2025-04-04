@@ -151,6 +151,15 @@ class AddSiteSettings extends Command {
       'ID of the group currency to award from gallery submissions (if enabled).'
     );
 
-    $this->line("\nSite settings up to date!");
-  }
+        $this->addSiteSetting('group_currency', 1, 'ID of the group currency to award from gallery submissions (if enabled).');
+
+        $this->addSiteSetting('site_season', 0, 'ID of the season the site is currently experiencing.');
+
+        $this->addSiteSetting('site_weather', 0, 'ID of the weather the site is currently experiencing.');
+
+        $this->addSiteSetting('site_weather_cycle', 0, '0 = Do not cycle, 1 = Daily, 2 = Weekly, 3 = Monthly');
+
+        $this->line("\nSite settings up to date!");
+
+    }
 }

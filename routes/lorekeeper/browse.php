@@ -95,20 +95,23 @@ Route::group(['prefix' => 'myo', 'namespace' => 'Characters'], function () {
 World
 **************************************************************************************************/
 
-Route::group(['prefix' => 'world'], function () {
-  Route::get('/', 'WorldController@getIndex');
+Route::group(['prefix' => 'world'], function() {
+    Route::get('/', 'WorldController@getIndex');
 
-  Route::get('currencies', 'WorldController@getCurrencies');
-  Route::get('rarities', 'WorldController@getRarities');
-  Route::get('species', 'WorldController@getSpecieses');
-  Route::get('subtypes', 'WorldController@getSubtypes');
-  Route::get('species/{id}/traits', 'WorldController@getSpeciesFeatures');
-  Route::get('item-categories', 'WorldController@getItemCategories');
-  Route::get('items', 'WorldController@getItems');
-  Route::get('items/{id}', 'WorldController@getItem');
-  Route::get('trait-categories', 'WorldController@getFeatureCategories');
-  Route::get('traits', 'WorldController@getFeatures');
-  Route::get('character-categories', 'WorldController@getCharacterCategories');
+    Route::get('currencies', 'WorldController@getCurrencies');
+    Route::get('rarities', 'WorldController@getRarities');
+    Route::get('species', 'WorldController@getSpecieses');
+    Route::get('subtypes', 'WorldController@getSubtypes');
+    Route::get('species/{id}/traits', 'WorldController@getSpeciesFeatures');
+    Route::get('item-categories', 'WorldController@getItemCategories');
+    Route::get('items', 'WorldController@getItems');
+    Route::get('items/{id}', 'WorldController@getItem');
+    Route::get('trait-categories', 'WorldController@getFeatureCategories');
+    Route::get('traits', 'WorldController@getFeatures');
+    Route::get('character-categories', 'WorldController@getCharacterCategories');
+    Route::get('seasons', 'WorldController@getSeasons');
+    Route::get('weathers', 'WorldController@getWeather');
+    Route::get('forecast', 'WorldController@getForecast');
 });
 
 Route::group(['prefix' => 'prompts'], function () {
