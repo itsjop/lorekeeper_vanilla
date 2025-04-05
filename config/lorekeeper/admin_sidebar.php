@@ -172,6 +172,14 @@ return [
       [
         'name' => 'Items',
         'url' => 'admin/data/items'
+      ],
+      [
+        'name' => 'Weather',
+        'url' => 'admin/weather/weathers'
+      ],
+      [
+        'name' => 'Transformations',
+        'url' => 'admin/data/transformations'
       ]
     ]
   ],

@@ -243,15 +243,25 @@ Route::post('prompt-categories/edit/{id?}', 'PromptController@postCreateEditProm
 Route::post('prompt-categories/delete/{id}', 'PromptController@postDeletePromptCategory');
 Route::post('prompt-categories/sort', 'PromptController@postSortPromptCategory');
 
-Route::get('prompts', 'PromptController@getPromptIndex');
-Route::get('prompts/create', 'PromptController@getCreatePrompt');
-Route::get('prompts/edit/{id}', 'PromptController@getEditPrompt');
-Route::get('prompts/delete/{id}', 'PromptController@getDeletePrompt');
-Route::post('prompts/create', 'PromptController@postCreateEditPrompt');
-Route::post('prompts/edit/{id?}', 'PromptController@postCreateEditPrompt');
-Route::post('prompts/delete/{id}', 'PromptController@postDeletePrompt');
-  }
-);
+    Route::get('prompts', 'PromptController@getPromptIndex');
+    Route::get('prompts/create', 'PromptController@getCreatePrompt');
+    Route::get('prompts/edit/{id}', 'PromptController@getEditPrompt');
+    Route::get('prompts/delete/{id}', 'PromptController@getDeletePrompt');
+    Route::post('prompts/create', 'PromptController@postCreateEditPrompt');
+    Route::post('prompts/edit/{id?}', 'PromptController@postCreateEditPrompt');
+    Route::post('prompts/delete/{id}', 'PromptController@postDeletePrompt');
+
+    # TRANSFORMATIONS
+    Route::get('transformations', 'TransformationController@getTransformationIndex');
+    Route::get('transformations/create', 'TransformationController@getCreateTransformation');
+    Route::get('transformations/edit/{id}', 'TransformationController@getEditTransformation');
+    Route::get('transformations/delete/{id}', 'TransformationController@getDeleteTransformation');
+    Route::post('transformations/create', 'TransformationController@postCreateEditTransformation');
+    Route::post('transformations/edit/{id?}', 'TransformationController@postCreateEditTransformation');
+    Route::post('transformations/delete/{id}', 'TransformationController@postDeleteTransformation');
+    Route::post('transformations/sort', 'TransformationController@postSortTransformations');
+});
+
 
 # PAGES
 Route::group(['prefix' => 'pages', 'middleware' => 'power:edit_pages'], function () {
@@ -334,23 +344,19 @@ Route::post('trade/{id}', 'CharacterController@postTradeQueue');
 Route::get('create-myo', 'CharacterController@getCreateMyo');
 Route::post('create-myo', 'CharacterController@postCreateMyo');
 
-Route::get('check-subtype', 'CharacterController@getCreateCharacterMyoSubtype');
-  }
-);
-Route::group(
-  ['prefix' => 'character', 'namespace' => 'Characters', 'middleware' => 'power:edit_inventories'],
-  function () {
-Route::post('{slug}/grant', 'GrantController@postCharacterCurrency');
-Route::post('{slug}/grant-items', 'GrantController@postCharacterItems');
-  }
-);
-Route::group(
-  ['prefix' => 'character', 'namespace' => 'Characters', 'middleware' => 'power:manage_characters'],
-  function () {
-# IMAGES
-Route::get('{slug}/image', 'CharacterImageController@getNewImage');
-Route::post('{slug}/image', 'CharacterImageController@postNewImage');
-Route::get('image/subtype', 'CharacterImageController@getNewImageSubtype');
+    Route::get('check-subtype', 'CharacterController@getCreateCharacterMyoSubtype');
+    Route::get('check-transformation', 'CharacterController@getCreateCharacterMyoTransformation');
+});
+Route::group(['prefix' => 'character', 'namespace' => 'Characters', 'middleware' => 'power:edit_inventories'], function() {
+    Route::post('{slug}/grant', 'GrantController@postCharacterCurrency');
+    Route::post('{slug}/grant-items', 'GrantController@postCharacterItems');
+});
+Route::group(['prefix' => 'character', 'namespace' => 'Characters', 'middleware' => 'power:manage_characters'], function() {
+
+    # IMAGES
+    Route::get('{slug}/image', 'CharacterImageController@getNewImage');
+    Route::post('{slug}/image', 'CharacterImageController@postNewImage');
+    Route::get('image/subtype', 'CharacterImageController@getNewImageSubtype');
 
 Route::get('image/{id}/traits', 'CharacterImageController@getEditImageFeatures');
 Route::post('image/{id}/traits', 'CharacterImageController@postEditImageFeatures');
@@ -373,7 +379,9 @@ Route::post('image/{id}/active', 'CharacterImageController@postImageActive');
 Route::get('image/{id}/delete', 'CharacterImageController@getImageDelete');
 Route::post('image/{id}/delete', 'CharacterImageController@postImageDelete');
 
-Route::post('{slug}/images/sort', 'CharacterImageController@postSortImages');
+    Route::post('{slug}/images/sort', 'CharacterImageController@postSortImages');
+    Route::get('image/transformation', 'CharacterImageController@getNewImageTransformation');
+    Route::get('image/traits/transformation', 'CharacterImageController@getEditImageTransformation');
 
 # CHARACTER
 Route::get('{slug}/stats', 'CharacterController@getEditCharacterStats');
@@ -503,6 +511,29 @@ Route::group(['prefix' => 'designs', 'middleware' => 'power:manage_characters'],
   );
   Route::post('vote/{id}/{action}', 'DesignController@postVote')->where('action', 'approve|reject');
 });
-Route::get('{type}/{status}', 'DesignController@getDesignIndex')
-  ->where('type', 'myo-approvals|design-approvals')
-  ->where('status', 'pending|approved|rejected');
+Route::get('{type}/{status}', 'DesignController@getDesignIndex')->where('type', 'myo-approvals|design-approvals')->where('status', 'pending|approved|rejected');
+
+
+//WEATHER
+Route::group(['prefix' => 'weather', 'namespace' => 'Data', 'middleware' => 'power:edit_data'], function() {
+
+ # SEASONS
+ Route::get('seasons', 'WeatherController@getIndex');
+ Route::get('seasons/create', 'WeatherController@getCreateSeason');
+ Route::get('seasons/edit/{id}', 'WeatherController@getEditSeason');
+ Route::get('seasons/delete/{id}', 'WeatherController@getDeleteSeason');
+ Route::get('seasons/roll/{id}', 'WeatherController@getRollSeason');
+ Route::post('seasons/create', 'WeatherController@postCreateEditSeason');
+ Route::post('seasons/edit/{id?}', 'WeatherController@postCreateEditSeason');
+ Route::post('seasons/delete/{id}', 'WeatherController@postDeleteSeason');
+
+ # weather
+Route::get('weathers', 'WeatherController@getWeatherIndex');
+Route::get('weathers/create', 'WeatherController@getCreateWeather');
+Route::get('weathers/edit/{id}', 'WeatherController@getEditWeather');
+Route::get('weathers/delete/{id}', 'WeatherController@getDeleteWeather');
+Route::post('weathers/create', 'WeatherController@postCreateEditWeather');
+Route::post('weathers/edit/{id?}', 'WeatherController@postCreateEditWeather');
+Route::post('weathers/delete/{id}', 'WeatherController@postDeleteWeather');
+
+});

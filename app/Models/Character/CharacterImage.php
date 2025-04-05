@@ -12,8 +12,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class CharacterImage extends Model {
   use SoftDeletes;
 
-  /** The attributes that are mass assignable.
-   * @var array */
+  /**
+   * The attributes that are mass assignable.
+   *
+   * @var array
+   */
   protected $fillable = [
     'character_id',
     'user_id',
@@ -32,7 +35,10 @@ class CharacterImage extends Model {
     'y1',
     'description',
     'parsed_description',
-    'is_valid'
+    'is_valid',
+    'transformation_id',
+    'transformation_info',
+    'transformation_description'
   ];
 
   /** The table associated with the model.
@@ -130,6 +136,14 @@ class CharacterImage extends Model {
     return $this->hasMany('App\Models\Character\CharacterImageCreator', 'character_image_id')
       ->where('type', 'Artist')
       ->where('character_type', 'Character');
+  }
+
+  /**********************************************************************************************
+    /**
+     * Get the transformation of the character image.
+     */
+  public function transformation() {
+    return $this->belongsTo('App\Models\Character\CharacterTransformation', 'transformation_id');
   }
 
   /**********************************************************************************************
