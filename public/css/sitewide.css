@@ -79,13 +79,17 @@
           width: 100%;
           object-fit: contain;
           object-position: center;
-          filter: drop-shadow(5px 10px 2px rgb(29, 1, 36));
+          filter: drop-shadow(5px 10px 2px rgba(29, 1, 36, 0.3));
         }
       }
     }
     #header-nav {
+      background-color: #4066c3;
       grid-area: nav;
       border-radius: 20px;
+      a {
+        color: white;
+      }
       .navbar-brand .navbar-brand-image {
         max-width: 40vw;
       }
@@ -269,18 +273,17 @@
       }
       #site-logo-header {
         position: relative;
+        justify-self: center;
         picture {
           width: 80vw;
-          height: 10vh;
           max-width: unset;
           justify-content: center;
-        }
-        img,
-        source {
-          max-width: unset;
-          width: 70vw;
-          max-height: 10vh;
-          object-fit: contain;
+          img,
+          source {
+            max-width: unset;
+            max-height: 10vh;
+            object-fit: contain;
+          }
         }
       }
     }

@@ -110,11 +110,11 @@
       {{-- Header Logo --}}
       <a id="site-logo-header" href="{{ url('/') }}">
         <picture>
-          <source srcset="{{ asset('images/somnivores/raw/logo_raw.png') }}"
+          <source srcset="{{ asset('images/somnivores/raw/logo_raw.webp') }}"
             media="(min-width: 992px)"
           />
-          <source srcset="{{ asset('images/somnivores/logo.png') }}" media="(min-width: 600px)" />
-          <img src="{{ asset('images/somnivores/logo.png') }}" alt="" />
+          <source srcset="{{ asset('images/somnivores/logo.webp') }}" media="(min-width: 600px)" />
+          <img src="{{ asset('images/somnivores/logo.webp') }}" alt="" />
         </picture>
       </a>
 
