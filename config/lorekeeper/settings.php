@@ -18,10 +18,11 @@ return [
     |--------------------------------------------------------------------------
     | Version
     |--------------------------------------------------------------------------
+    |
     | This is the current version of Lorekeeper that your site is on.
     | Do not change this value!
     */
-  'version' => '2.1.7',
+  'version' => '2.0.0',
 
   /*
     |--------------------------------------------------------------------------
@@ -170,14 +171,26 @@ return [
   'trade_asset_limit' => 20,
 
   /*
-    |--------------------------------------------------------------------------
-    | Shop Purchase Limit
-    |--------------------------------------------------------------------------
-    | This is an arbitrary upper limit on how many items a uses can buy in a
-    | single shop transaction.
-    */
+  |--------------------------------------------------------------------------
+  | Shops
+  |--------------------------------------------------------------------------
+  | Purchase limit:
+  |       This is an arbitrary upper limit on how many items a uses can buy in a
+  | single shop transaction.
+  */
   'default_purchase_limit' => 99,
-
+  /*
+    |
+    | Donation Shop:
+    |       Item donations: Controls restrictions (or lack thereof) on user item donations. 0: No restrictions. Any item can be donated. 1: Only items of certain categories may be donated (configure when creating/editing item categories). 2: Only items with the 'donatable' tag may be donated. 3: Items in certain categories or that have the 'donateable' tag may be donated. Default: 0.
+    |       Cooldown: Time (in minutes) that users must wait between "purchases". Default: 5.
+    |       Expiry: Time (in months) before items are automatically deleted from the donation shop. Set to 0 to disable expiry. Default: 0.
+    */
+  'donation_shop' => [
+    'item_donations' => 0,
+    'cooldown' => 5,
+    'expiry' => 0
+  ],
   /*
     |--------------------------------------------------------------------------
     | Currency Symbol

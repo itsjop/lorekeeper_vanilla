@@ -165,65 +165,54 @@
           World
         </a>
 
-        <div class="dropdown-menu" aria-labelledby="loreDropdown">
-          <a class="dropdown-item" href="{{ url('world') }}">
-            Encyclopedia
-          </a>
-          <a class="dropdown-item" href="{{ url('prompts/prompts') }}">
-            Prompts
-          </a>
-          <a class="dropdown-item" href="{{ url('shops') }}">
-            Shops
-          </a>
-        </div>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="{{ url('gallery') }}">Gallery</a>
-      </li>
-    </ul>
-    <!-- Right Side Of Navbar -->
-    <ul class="navbar-nav ml-auto">
-      <!-- Authentication Links -->
-      @guest
-        <li class="nav-item">
-          <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
-        </li>
-        @if (Route::has('register'))
-          <li class="nav-item">
-            <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
-          </li>
-        @endif
-      @else
-        @if (Auth::user()->isStaff)
-          <li class="nav-item">
-            <a class="nav-link" href="{{ url('admin') }}">
-              <i class="fas fa-crown">
-              </i>
-            </a>
-          </li>
-        @endif
-        @if (Auth::user()->notifications_unread)
-          <li class="nav-item">
-            <a class="nav-link btn btn-secondary btn-sm" href="{{ url('notifications') }}">
-              <span class="fas fa-envelope">
-              </span>
-              {{ Auth::user()->notifications_unread }}</a>
-          </li>
-        @endif
+                    <div class="dropdown-menu" aria-labelledby="loreDropdown">
+                        <a class="dropdown-item" href="{{ url('world') }}">
+                            Encyclopedia
+                        </a>
+                        <a class="dropdown-item" href="{{ url('prompts/prompts') }}">
+                            Prompts
+                        </a>
+                        <a class="dropdown-item" href="{{ url('shops') }}">
+                            Shops
+                        </a>
+                        <a class="dropdown-item" href="{{ url(__('dailies.dailies')) }}">
+                        {{__('dailies.dailies')}}
+                        </a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url('gallery') }}">Gallery</a>
+                </li>
+            </ul>
 
-        <li class="nav-item dropdown">
-          <a
-            id="browseDropdown"
-            class="nav-link dropdown-toggle"
-            href="#"
-            role="button"
-            data-toggle="dropdown"
-            aria-haspopup="true"
-            aria-expanded="false"
-            v-pre
-          >
-            Submit
-          </a>
+            <!-- Right Side Of Navbar -->
+            <ul class="navbar-nav ml-auto">
+                <!-- Authentication Links -->
+                @guest
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+                    </li>
+                    @if (Route::has('register'))
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
+                        </li>
+                    @endif
+                @else
+                    @if(Auth::user()->isStaff)
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url('admin') }}"><i class="fas fa-crown"></i></a>
+                        </li>
+                    @endif
+                    @if(Auth::user()->notifications_unread)
+                        <li class="nav-item">
+                            <a class="nav-link btn btn-secondary btn-sm" href="{{ url('notifications') }}"><span class="fas fa-envelope"></span> {{ Auth::user()->notifications_unread }}</a>
+                        </li>
+                    @endif
+
+                    <li class="nav-item dropdown">
+                        <a id="browseDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                            Submit
+                        </a>
 
           <div class="dropdown-menu" aria-labelledby="browseDropdown">
             <a class="dropdown-item" href="{{ url('submissions/new') }}">

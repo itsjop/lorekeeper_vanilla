@@ -69,8 +69,8 @@ Route::group(['prefix' => 'bank', 'namespace' => 'Users'], function () {
 
 Route::group(['prefix' => 'trades', 'namespace' => 'Users'], function () {
   Route::get('{status}', 'TradeController@getIndex')->where(
-'status',
-'open|pending|completed|rejected|canceled'
+    'status',
+    'open|pending|completed|rejected|canceled'
   );
   Route::get('create', 'TradeController@getCreateTrade');
   Route::get('{id}/edit', 'TradeController@getEditTrade')->where('id', '[0-9]+');
@@ -102,7 +102,7 @@ Route::group(['prefix' => 'character', 'namespace' => 'Characters'], function ()
 
   Route::post('{slug}/approval', 'CharacterController@postCharacterApproval');
   Route::get('{slug}/approval', 'CharacterController@getCharacterApproval');
-    Route::post('{slug}/approval/{id}', 'CharacterController@postCharacterApprovalSpecificImage');
+  Route::post('{slug}/approval/{id}', 'CharacterController@postCharacterApprovalSpecificImage');
 });
 Route::group(['prefix' => 'myo', 'namespace' => 'Characters'], function () {
   Route::get('{id}/profile/edit', 'MyoController@getEditCharacterProfile');
@@ -114,8 +114,8 @@ Route::group(['prefix' => 'myo', 'namespace' => 'Characters'], function () {
 
   Route::post('{id}/approval', 'MyoController@postCharacterApproval');
   Route::get('{id}/approval', 'MyoController@getCharacterApproval');
-    //this is useless but im not sure if we dont include it things will get weird or not
-    Route::post('{slug}/approval/{id}', 'CharacterController@postCharacterApprovalSpecificImage');
+  //this is useless but im not sure if we dont include it things will get weird or not
+  Route::post('{slug}/approval/{id}', 'CharacterController@postCharacterApprovalSpecificImage');
 });
 
 /**************************************************************************************************
@@ -124,8 +124,8 @@ Submissions
 
 Route::group(['prefix' => 'gallery'], function () {
   Route::get('submissions/{type}', 'GalleryController@getUserSubmissions')->where(
-'type',
-'pending|accepted|rejected'
+    'type',
+    'pending|accepted|rejected'
   );
 
   Route::post('favorite/{id}', 'GalleryController@postFavoriteSubmission');
@@ -147,6 +147,7 @@ Route::group(['prefix' => 'submissions', 'namespace' => 'Users'], function () {
   Route::get('/', 'SubmissionController@getIndex');
   Route::get('new', 'SubmissionController@getNewSubmission');
   Route::get('new/character/{slug}', 'SubmissionController@getCharacterInfo');
+  Route::get('new/character-permissions/{slug}', 'SubmissionController@getCharacterPermissions');
   Route::get('new/prompt/{id}', 'SubmissionController@getPromptInfo');
   Route::post('new', 'SubmissionController@postNewSubmission');
 });
@@ -166,8 +167,8 @@ Route::group(['prefix' => 'reports', 'namespace' => 'Users'], function () {
 
 Route::group(['prefix' => 'designs', 'namespace' => 'Characters'], function () {
   Route::get('{type?}', 'DesignController@getDesignUpdateIndex')->where(
-'type',
-'pending|approved|rejected'
+    'type',
+    'pending|approved|rejected'
   );
   Route::get('{id}', 'DesignController@getDesignUpdate');
 
@@ -183,7 +184,7 @@ Route::group(['prefix' => 'designs', 'namespace' => 'Characters'], function () {
   Route::get('{id}/traits', 'DesignController@getFeatures');
   Route::post('{id}/traits', 'DesignController@postFeatures');
   Route::get('traits/subtype', 'DesignController@getFeaturesSubtype');
-    Route::get('traits/transformation', 'DesignController@getFeaturesTransformation');
+  Route::get('traits/transformation', 'DesignController@getFeaturesTransformation');
 
   Route::get('{id}/confirm', 'DesignController@getConfirm');
   Route::post('{id}/submit', 'DesignController@postSubmit');
@@ -198,7 +199,19 @@ Shops
 
 Route::group(['prefix' => 'shops'], function () {
   Route::post('buy', 'ShopController@postBuy');
+  Route::post('collect', 'ShopController@postCollect');
   Route::get('history', 'ShopController@getPurchaseHistory');
+});
+
+/**************************************************************************************************
+    Dailies
+**************************************************************************************************/
+
+Route::group(['prefix' => __('dailies.dailies')], function () {
+  // throttle requests to 1 per ~10 seconds
+  Route::middleware('throttle:1,0.16')->group(function () {
+    Route::post('{id}', 'DailyController@postRoll');
+  });
 });
 
 /**************************************************************************************************

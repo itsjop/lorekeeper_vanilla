@@ -272,15 +272,47 @@ class Item extends Model {
     return Shop::whereIn('id', $itemShops)->get();
   }
 
-  /** Get the prompts attribute as an associative array.
-   * @return array */
-  public function getPromptsAttribute() {
-    if (!$this->data) {
-      return null;
+    /**
+     * Get the prompts attribute as an associative array.
+     *
+     * @return array
+     */
+    public function getPromptsAttribute()
+    {
+        if (!$this->data) return null;
+        $itemPrompts = $this->data['prompts'];
+        return Prompt::whereIn('id', $itemPrompts)->get();
     }
-    $itemPrompts = $this->data['prompts'];
-    return Prompt::whereIn('id', $itemPrompts)->get();
-  }
+
+    /**
+     * Check if an item can be donated.
+     *
+     * @return bool
+     */
+    public function getCanDonateAttribute()
+    {
+        if(!$this->allow_transfer) return 0;
+        $setting = Config::get('lorekeeper.settings.donation_shop.item_donations');
+        switch($setting) {
+            case 0:
+                return 1;
+                break;
+            case 1:
+                if($this->category->can_donate) return 1;
+                else return 0;
+                break;
+            case 2:
+                if($this->hasTag('donateable')) return 1;
+                else return 0;
+                break;
+            case 3:
+                if($this->category->can_donate) return 1;
+                elseif($this->hasTag('donateable')) return 1;
+                else return 0;
+                break;
+        };
+        return 0;
+    }
 
   /**********************************************************************************************
 

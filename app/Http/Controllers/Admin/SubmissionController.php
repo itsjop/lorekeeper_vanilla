@@ -190,7 +190,7 @@ class SubmissionController extends Controller {
       'rewardable_type',
       'rewardable_id',
       'quantity',
-      'staff_comments'
+      'staff_comments', 'character_notify_owner'
     ]);
     if (
       $action == 'reject' &&

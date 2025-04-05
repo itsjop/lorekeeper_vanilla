@@ -7,34 +7,46 @@ use App\Services\LinkService;
 use App\Services\UserService;
 use Auth;
 use Carbon\Carbon;
+use Settings;
 use Config;
 use DB;
 use Illuminate\Http\Request;
 use Laravel\Socialite\Facades\Socialite;
 
-class HomeController extends Controller {
-  /*
+use App\Models\Character\Character;
+use App\Services\DeviantArtService;
+
+class HomeController extends Controller
+{
+    /*
     |--------------------------------------------------------------------------
     | Home Controller
     |--------------------------------------------------------------------------
     | Displays the homepage and handles redirection for linking a user's social media account.
     */
 
-  /** Shows the homepage.
-   * @return \Illuminate\Contracts\Support\Renderable */
-  public function getIndex() {
-    return view('welcome', [
-      'about' => SitePage::where('key', 'about')->first()
-    ]);
-  }
-
-  /** Shows the account linking page.
-   * @return \Illuminate\Contracts\Support\Renderable */
-  public function getLink(Request $request) {
-    // If the user already has a username associated with their account, redirect them
-    if (Auth::check() && Auth::user()->hasAlias) {
-      redirect()->to('home');
+    /**
+     * Shows the homepage.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getIndex()
+    {
+        return view('welcome', [
+            'about' => SitePage::where('key', 'about')->first()
+        ]);
     }
+
+    /**
+     * Shows the account linking page.
+     *
+     * @param  \Illuminate\Http\Request        $request
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getLink(Request $request)
+    {
+        // If the user already has a username associated with their account, redirect them
+        if(Auth::check() && Auth::user()->hasAlias) redirect()->to('home');
 
     // Display the login link
     return view('auth.link');

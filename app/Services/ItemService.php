@@ -91,22 +91,21 @@ class ItemService extends Service {
     return $this->rollbackReturn(false);
   }
 
-  /** Handle category data.
-   * @param  array                               $data
-   * @param  \App\Models\Item\ItemCategory|null  $category
-   * @return array */
-  private function populateCategoryData($data, $category = null) {
-    if (isset($data['description']) && $data['description']) {
-      $data['parsed_description'] = parse($data['description']);
-    }
+    /**
+     * Handle category data.
+     *
+     * @param  array                               $data
+     * @param  \App\Models\Item\ItemCategory|null  $category
+     * @return array
+     */
+    private function populateCategoryData($data, $category = null)
+    {
+        if(isset($data['description']) && $data['description']) $data['parsed_description'] = parse($data['description']);
 
-    isset($data['is_character_owned']) && $data['is_character_owned']
-      ? $data['is_character_owned']
-      : ($data['is_character_owned'] = 0);
-    isset($data['character_limit']) && $data['character_limit']
-      ? $data['character_limit']
-      : ($data['character_limit'] = 0);
-    isset($data['can_name']) && $data['can_name'] ? $data['can_name'] : ($data['can_name'] = 0);
+        isset($data['is_character_owned']) && $data['is_character_owned'] ? $data['is_character_owned'] : $data['is_character_owned'] = 0;
+        isset($data['character_limit']) && $data['character_limit'] ? $data['character_limit'] : $data['character_limit'] = 0;
+        isset($data['can_donate']) && $data['can_donate'] ? $data['can_donate'] : $data['can_donate'] = 0;
+        isset($data['can_name']) && $data['can_name'] ? $data['can_name'] : $data['can_name'] = 0;
 
     if (isset($data['remove_image'])) {
       if ($category && $category->has_image && $data['remove_image']) {

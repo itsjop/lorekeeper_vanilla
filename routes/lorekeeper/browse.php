@@ -56,7 +56,6 @@ Route::group(['prefix' => 'user', 'namespace' => 'Users'], function () {
   Route::get('{name}/myos', 'UserController@getUserMyoSlots');
   Route::get('{name}/inventory', 'UserController@getUserInventory');
   Route::get('{name}/bank', 'UserController@getUserBank');
-
   Route::get('{name}/currency-logs', 'UserController@getUserCurrencyLogs');
   Route::get('{name}/item-logs', 'UserController@getUserItemLogs');
   Route::get('{name}/ownership', 'UserController@getUserOwnershipLogs');
@@ -83,7 +82,7 @@ Route::group(['prefix' => 'character', 'namespace' => 'Characters'], function ()
   Route::get('{slug}/submissions', 'CharacterController@getCharacterSubmissions');
 
   Route::get('{slug}/gallery', 'CharacterController@getCharacterGallery');
-    Route::get('{slug}/image/{id}', 'CharacterController@getCharacterImage');
+  Route::get('{slug}/image/{id}', 'CharacterController@getCharacterImage');
 });
 Route::group(['prefix' => 'myo', 'namespace' => 'Characters'], function () {
   Route::get('{id}', 'MyoController@getCharacter');
@@ -95,25 +94,24 @@ Route::group(['prefix' => 'myo', 'namespace' => 'Characters'], function () {
 /**************************************************************************************************
 World
 **************************************************************************************************/
+Route::group(['prefix' => 'world'], function () {
+  Route::get('/', 'WorldController@getIndex');
 
-Route::group(['prefix' => 'world'], function() {
-    Route::get('/', 'WorldController@getIndex');
-
-    Route::get('currencies', 'WorldController@getCurrencies');
-    Route::get('rarities', 'WorldController@getRarities');
-    Route::get('species', 'WorldController@getSpecieses');
-    Route::get('subtypes', 'WorldController@getSubtypes');
-    Route::get('species/{id}/traits', 'WorldController@getSpeciesFeatures');
-    Route::get('item-categories', 'WorldController@getItemCategories');
-    Route::get('items', 'WorldController@getItems');
-    Route::get('items/{id}', 'WorldController@getItem');
-    Route::get('trait-categories', 'WorldController@getFeatureCategories');
-    Route::get('traits', 'WorldController@getFeatures');
-    Route::get('character-categories', 'WorldController@getCharacterCategories');
-    Route::get(__('transformations.transformations'), 'WorldController@getTransformations');
-    Route::get('seasons', 'WorldController@getSeasons');
-    Route::get('weathers', 'WorldController@getWeather');
-    Route::get('forecast', 'WorldController@getForecast');
+  Route::get('currencies', 'WorldController@getCurrencies');
+  Route::get('rarities', 'WorldController@getRarities');
+  Route::get('species', 'WorldController@getSpecieses');
+  Route::get('subtypes', 'WorldController@getSubtypes');
+  Route::get('species/{id}/traits', 'WorldController@getSpeciesFeatures');
+  Route::get('item-categories', 'WorldController@getItemCategories');
+  Route::get('items', 'WorldController@getItems');
+  Route::get('items/{id}', 'WorldController@getItem');
+  Route::get('trait-categories', 'WorldController@getFeatureCategories');
+  Route::get('traits', 'WorldController@getFeatures');
+  Route::get('character-categories', 'WorldController@getCharacterCategories');
+  Route::get(__('transformations.transformations'), 'WorldController@getTransformations');
+  Route::get('seasons', 'WorldController@getSeasons');
+  Route::get('weathers', 'WorldController@getWeather');
+  Route::get('forecast', 'WorldController@getForecast');
 });
 
 Route::group(['prefix' => 'prompts'], function () {
@@ -126,9 +124,18 @@ Route::group(['prefix' => 'shops'], function () {
   Route::get('/', 'ShopController@getIndex');
   Route::get('{id}', 'ShopController@getShop')->where(['id' => '[0-9]+']);
   Route::get('{id}/{stockId}', 'ShopController@getShopStock')->where([
-'id' => '[0-9]+',
-'stockId' => '[0-9]+'
+    'id' => '[0-9]+',
+    'stockId' => '[0-9]+'
   ]);
+  Route::get('donation-shop', 'ShopController@getDonationShop');
+  Route::get('donation-shop/{id}', 'ShopController@getDonationShopStock')->where([
+    'id' => '[0-9]+'
+  ]);
+});
+
+Route::group(['prefix' => __('dailies.dailies')], function () {
+  Route::get('/', 'DailyController@getIndex');
+  Route::get('{id}', 'DailyController@getDaily')->where(['id' => '[0-9]+']);
 });
 
 /**************************************************************************************************

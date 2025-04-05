@@ -10,7 +10,18 @@
     @endif
 @endsection
 
+<<<<<<< HEAD
 
 @section('sidebar')
     @include('widgets._current_weather')
+@endsection
+=======
+@section('sidebar')
+    @include('pages._sidebar')
+    @include('widgets._current_weather')
+@endsection
+>>>>>>> dee57d268a043afea026af883429bf0b18d090f8
+
+@section('sidebar')
+    @include('pages._sidebar')
 @endsection

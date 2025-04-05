@@ -16,12 +16,11 @@
   </li>
 @endif
 
-<li class="sidebar-section">
-  <div class="sidebar-section-header">Shops</div>
-  @foreach ($shops as $shop)
-    <div class="sidebar-item">
-      <a href="{{ $shop->url }}"
-        class="{{ set_active('shops/' . $shop->id) }}">{{ $shop->name }}</a>
-    </div>
-  @endforeach
-</li>
+    <li class="sidebar-section">
+        <div class="sidebar-section-header">Shops</div>
+        @foreach($shops as $shop)
+            <div class="sidebar-item"><a href="{{ $shop->url }}" class="{{ set_active('shops/'.$shop->id) }}">{{ $shop->name }}</a></div>
+        @endforeach
+        <div class="sidebar-item"><a href="{{ url('shops/donation-shop') }}" class="{{ set_active('shops/donation-shop') }}">Donation Shop</a></div>
+    </li>
+</ul>

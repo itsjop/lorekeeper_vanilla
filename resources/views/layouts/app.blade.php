@@ -50,18 +50,22 @@
   <meta name="robots" content="noai">
   <meta name="robots" content="noimageai">
 
-  <!-- Scripts -->
-  <script src="{{ asset('js/app.js') }}"></script>
-  <script src="{{ asset('js/site.js') }}"></script>
-  <script src="{{ asset('js/jquery-ui.min.js') }}"></script>
-  <script src="{{ asset('js/bootstrap4-toggle.min.js') }}"></script>
-  <script src="{{ asset('js/tinymce.min.js') }}"></script>
-  <script src="{{ asset('js/jquery.tinymce.min.js') }}"></script>
-  <script src="{{ asset('js/lightbox.min.js') }}"></script>
-  <script src="{{ asset('js/bootstrap-colorpicker.min.js') }}"></script>
-  <script src="{{ asset('js/selectize.min.js') }}"></script>
-  <script src="{{ asset('js/jquery-ui-timepicker-addon.js') }}"></script>
-  <script src="{{ asset('js/croppie.min.js') }}"></script>
+    <!-- Scripts -->
+    <script src="{{ asset('js/app.js') }}"></script>
+    <script src="{{ asset('js/site.js') }}"></script>
+    <script src="{{ asset('js/jquery-ui.min.js') }}"></script>
+    <script src="{{ asset('js/bootstrap4-toggle.min.js') }}"></script>
+    <script src="{{ asset('js/tinymce.min.js') }}"></script>
+    <script src="{{ asset('js/jquery.tinymce.min.js') }}"></script>
+    <script src="{{ asset('js/lightbox.min.js') }}"></script>
+    <script src="{{ asset('js/bootstrap-colorpicker.min.js') }}"></script>
+    <script src="{{ asset('js/selectize.min.js') }}"></script>
+    <script src="{{ asset('js/jquery-ui-timepicker-addon.js') }}"></script>
+    <script src="{{ asset('js/croppie.min.js') }}"></script>
+
+    <!-- Scripts for wheel of fortune dailies -->
+    <script src="{{ asset('js/winwheel.min.js') }}"></script>
+    <script src="{{ asset('js/tweenmax.min.js') }}"></script>
 
   <!-- Fonts -->
   <link rel="dns-prefetch" href="//fonts.gstatic.com">

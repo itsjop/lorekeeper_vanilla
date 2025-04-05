@@ -142,15 +142,21 @@ class User extends Authenticatable implements MustVerifyEmail {
       ->orderBy('created_at', 'DESC');
   }
 
-  /** Get all of the user's favorited gallery submissions. */
-  public function galleryFavorites() {
-    return $this->hasMany('App\Models\Gallery\GalleryFavorite')->where('user_id', $this->id);
-  }
+    /**
+     * Get all of the user's favorited gallery submissions.
+     */
+    public function galleryFavorites()
+    {
+        return $this->hasMany('App\Models\Gallery\GalleryFavorite')->where('user_id', $this->id);
+    }
 
-  /** Get all of the user's character bookmarks. */
-  public function bookmarks() {
-    return $this->hasMany('App\Models\Character\CharacterBookmark')->where('user_id', $this->id);
-  }
+    /**
+     * Get all of the user's character bookmarks.
+     */
+    public function bookmarks()
+    {
+        return $this->hasMany('App\Models\Character\CharacterBookmark')->where('user_id', $this->id);
+    }
 
   /**********************************************************************************************
 
@@ -301,16 +307,16 @@ class User extends Authenticatable implements MustVerifyEmail {
     }
   }
 
-  /** Check if user is of age */
-  public function getcheckBirthdayAttribute() {
-    $bday = $this->birthday;
-    if (!$bday || $bday->diffInYears(carbon::now()) < 13) {
-      return false;
-    } else {
-      return true;
+    /**
+     * Check if user is of age
+     */
+    public function getcheckBirthdayAttribute()
+    {
+        $bday = $this->birthday;
+        if(!$bday || $bday->diffInYears(carbon::now()) < 13) return false;
+        else return true;
     }
-  }
-  /**********************************************************************************************
+    /**********************************************************************************************
 
         OTHER FUNCTIONS
 

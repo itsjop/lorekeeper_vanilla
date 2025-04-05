@@ -62,36 +62,32 @@ class ItemController extends Controller {
     ]);
   }
 
-  /** Creates or edits an item category.
-   * @param  \Illuminate\Http\Request  $request
-   * @param  App\Services\ItemService  $service
-   * @param  int|null                  $id
-   * @return \Illuminate\Http\RedirectResponse */
-  public function postCreateEditItemCategory(Request $request, ItemService $service, $id = null) {
-    $id
-      ? $request->validate(ItemCategory::$updateRules)
-      : $request->validate(ItemCategory::$createRules);
-    $data = $request->only([
-      'name',
-      'description',
-      'image',
-      'remove_image',
-      'is_character_owned',
-      'character_limit',
-      'can_name'
-    ]);
-    if ($id && $service->updateItemCategory(ItemCategory::find($id), $data, Auth::user())) {
-      flash('Category updated successfully.')->success();
-    } elseif (!$id && ($category = $service->createItemCategory($data, Auth::user()))) {
-      flash('Category created successfully.')->success();
-      return redirect()->to('admin/data/item-categories/edit/' . $category->id);
-    } else {
-      foreach ($service->errors()->getMessages()['error'] as $error) {
-        flash($error)->error();
-      }
+    /**
+     * Creates or edits an item category.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  App\Services\ItemService  $service
+     * @param  int|null                  $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function postCreateEditItemCategory(Request $request, ItemService $service, $id = null)
+    {
+        $id ? $request->validate(ItemCategory::$updateRules) : $request->validate(ItemCategory::$createRules);
+        $data = $request->only([
+            'name', 'description', 'image', 'remove_image', 'is_character_owned', 'character_limit', 'can_name', 'can_donate'
+        ]);
+        if($id && $service->updateItemCategory(ItemCategory::find($id), $data, Auth::user())) {
+            flash('Category updated successfully.')->success();
+        }
+        else if (!$id && $category = $service->createItemCategory($data, Auth::user())) {
+            flash('Category created successfully.')->success();
+            return redirect()->to('admin/data/item-categories/edit/'.$category->id);
+        }
+        else {
+            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+        }
+        return redirect()->back();
     }
-    return redirect()->back();
-  }
 
   /** Gets the item category deletion modal.
    * @param  int  $id
