@@ -135,10 +135,29 @@ class SubmissionController extends Controller {
   public function getCharacterInfo($slug) {
     $character = Character::visible()->where('slug', $slug)->first();
 
-    return view('home._character', [
-      'character' => $character
-    ]);
-  }
+        return view('home._character', [
+            'character' => $character,
+        ]);
+    }
+
+    /**
+     * Shows character gift art/writing permissions.
+     *
+     * @param  string  $slug
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function getCharacterPermissions($slug)
+    {
+        $character = Character::visible()->where('slug', $slug)->first();
+        $allowArt = $character->is_gift_art_allowed;
+        $allowWriting = $character->is_gift_writing_allowed;
+
+        return view('home._character_gift_permissions', [
+            'character' => $character,
+            'allowArt' => $allowArt,
+            'allowWriting' => $allowWriting,
+        ]);
+    }
 
   /** Shows prompt information.
    * @param  int  $id
@@ -180,7 +199,7 @@ class SubmissionController extends Controller {
           'stack_id',
           'stack_quantity',
           'currency_id',
-          'currency_quantity'
+          'currency_quantity', 'character_notify_owner'
         ]),
         Auth::user()
       )
@@ -308,7 +327,7 @@ class SubmissionController extends Controller {
           'rewardable_id',
           'quantity',
           'currency_id',
-          'currency_quantity'
+          'currency_quantity', 'character_notify_owner'
         ]),
         Auth::user(),
         true

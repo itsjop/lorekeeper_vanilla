@@ -10,7 +10,7 @@ use App\Models\Model;
 class SubmissionCharacter extends Model {
   /** The attributes that are mass assignable.
    * @var array */
-  protected $fillable = ['submission_id', 'character_id', 'data'];
+  protected $fillable = ['submission_id', 'character_id', 'data', 'notify_owner'];
 
   /** The table associated with the model.
    * @var string */
