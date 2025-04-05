@@ -52,6 +52,7 @@
     <a href="{{ $user->url . '/bank' }}"
       class="{{ set_active('user/' . $user->name . '/bank*') }}">Bank</a>
   </div>
+        <div class="sidebar-item"><a href="{{ $user->url.'/borders' }}" class="{{ set_active('user/'.$user->name.'/borders*') }}">Borders</a></div>
 </li>
 <li class="sidebar-section">
   <div class="sidebar-section-header">History</div>
@@ -72,6 +73,7 @@
     <a href="{{ $user->url . '/submissions' }}"
       class="{{ set_active($user->url . '/submissions*') }}">Submissions</a>
   </div>
+        <div class="sidebar-item"><a href="{{ $user->url.'/border-logs' }}" class="{{ set_active('user/'.$user->name.'/border-logs*') }}">Border Logs</a></div>
 </li>
 
 @if (Auth::check() && Auth::user()->hasPower('edit_user_info'))

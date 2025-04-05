@@ -9,21 +9,17 @@
     <div id="comment-{{ $comment->getKey() }}" class="pt-4" style="flex-basis: 100%;">
 @endif
 <div class="media-body row mw-100 mx-0" style="flex:1;flex-wrap:wrap;">
-  <div class="d-none d-md-block">
-    <img class="mr-3 mt-2" src="/images/avatars/{{ $comment->commenter->avatar }}"
-         style="width:70px; height:70px; border-radius:50%;"
-         alt="{{ $comment->commenter->name }} Avatar">
-  </div>
-  <div class="d-block" style="flex:1">
-    <div class="row mx-0 px-0 align-items-md-end">
-      <h5 class="mt-0 mb-1 col mx-0 px-0">
-        {!! $comment->commenter->commentDisplayName !!} @if ($comment->commenter->isStaff == true)
-          <small class="text-muted">Staff Member</small>
-        @endif
-      </h5>
-      @if ($comment->is_featured)
-        <div class="ml-1 text-muted text-right col-6 mx-0 pr-1">
-          <small class="text-success">Featured by Owner</small>
+    <div class="d-none d-md-block">
+
+      {!!  $comment->commenter->userBorder() !!}
+        <img class="mr-3 mt-2" src="/images/avatars/{{ $comment->commenter->avatar }}" style="width:70px; height:70px; border-radius:50%;" alt="{{ $comment->commenter->name }} Avatar">
+    </div>
+    <div class="d-block" style="flex:1">
+        <div class="row mx-0 px-0 align-items-md-end">
+            <h5 class="mt-0 mb-1 col mx-0 px-0">
+                {!! $comment->commenter->commentDisplayName !!} @if($comment->commenter->isStaff == true)<small class="text-muted">Staff Member</small>@endif
+            </h5>
+            @if($comment->is_featured)<div class="ml-1 text-muted text-right col-6 mx-0 pr-1"><small class="text-success">Featured by Owner</small></div> @endif
         </div>
       @endif
     </div>

@@ -12,7 +12,7 @@ class UserSettings extends Model {
     'submission_count',
     'banned_at',
     'ban_reason',
-    'birthday_setting'
+    'birthday_setting','border_settings'
   ];
 
   /** The primary key of the model.
@@ -23,18 +23,24 @@ class UserSettings extends Model {
    * @var string */
   protected $table = 'user_settings';
 
-  /** Dates on the model to convert to Carbon instances.
-   * @var array */
-  protected $dates = ['banned_at'];
+    /**
+     * Dates on the model to convert to Carbon instances.
+     *
+     * @var array
+     */
+    protected $dates = ['banned_at'];
 
-  /**********************************************************************************************
+    /**********************************************************************************************
 
         RELATIONS
 
     **********************************************************************************************/
 
-  /** Get the user this set of settings belongs to. */
-  public function user() {
-    return $this->belongsTo('App\Models\User\User');
-  }
+    /**
+     * Get the user this set of settings belongs to.
+     */
+    public function user()
+    {
+        return $this->belongsTo('App\Models\User\User');
+    }
 }

@@ -251,6 +251,31 @@ Route::post('prompt-categories/sort', 'PromptController@postSortPromptCategory')
     Route::post('prompts/edit/{id?}', 'PromptController@postCreateEditPrompt');
     Route::post('prompts/delete/{id}', 'PromptController@postDeletePrompt');
 
+     # BORDERS
+     Route::get('border-categories', 'BorderController@getIndex');
+     Route::get('border-categories/create', 'BorderController@getCreateBorderCategory');
+     Route::get('border-categories/edit/{id}', 'BorderController@getEditBorderCategory');
+     Route::get('border-categories/delete/{id}', 'BorderController@getDeleteBorderCategory');
+     Route::post('border-categories/create', 'BorderController@postCreateEditBorderCategory');
+     Route::post('border-categories/edit/{id?}', 'BorderController@postCreateEditBorderCategory');
+     Route::post('border-categories/delete/{id}', 'BorderController@postDeleteBorderCategory');
+     Route::post('border-categories/sort', 'BorderController@postSortBorderCategory');
+
+     Route::get('borders', 'BorderController@getBorderIndex');
+     Route::get('borders/create', 'BorderController@getCreateBorder');
+     Route::get('borders/edit/{id}', 'BorderController@getEditBorder');
+     Route::get('borders/delete/{id}', 'BorderController@getDeleteBorder');
+     Route::post('borders/create', 'BorderController@postCreateEditBorder');
+     Route::post('borders/edit/{id?}', 'BorderController@postCreateEditBorder');
+     Route::post('borders/delete/{id}', 'BorderController@postDeleteBorder');
+
+    Route::get('borders/edit/{border_id}/{type}s/create', 'BorderController@getCreateEditVariant');
+    Route::get('borders/edit/{border_id}/{type}s/edit/{id}', 'BorderController@getCreateEditVariant');
+    Route::post('borders/edit/{border_id}/{type}s/create', 'BorderController@postCreateEditVariant');
+    Route::post('borders/edit/{border_id}/{type}s/edit/{id}', 'BorderController@postCreateEditVariant');
+
+    Route::post('borders/item/{id}', 'BorderController@postCreateItem');
+
     # DAILIES
     Route::get('dailies', 'DailyController@getIndex');
     Route::get('dailies/create', 'DailyController@getCreateDaily');
@@ -325,6 +350,9 @@ Route::get('items', 'GrantController@getItems');
 Route::post('items', 'GrantController@postItems');
 
 Route::get('item-search', 'GrantController@getItemSearch');
+
+    Route::get('borders', 'GrantController@getBorders');
+    Route::post('borders', 'GrantController@postBorders');
   }
 );
 

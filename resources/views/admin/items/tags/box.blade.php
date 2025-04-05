@@ -8,5 +8,5 @@
 @include('widgets._loot_select', [
     'loots' => $tag->getData(),
     'showLootTables' => true,
-    'showRaffles' => true
+    'showRaffles' => true,'showBorders' => true
 ])
