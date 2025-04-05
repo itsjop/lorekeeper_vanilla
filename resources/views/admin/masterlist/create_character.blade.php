@@ -290,7 +290,7 @@
     <script>
         $("#species").change(function() {
             var species = $('#species').val();
-            var myo = '<?php echo $ipsMyo; ?>';
+            var myo = '<?php echo $isMyo; ?>';
             $.ajax({
                 type: "GET",
                 url: "{{ url('admin/masterlist/check-subtype') }}?species=" + species + "&myo=" + myo,
