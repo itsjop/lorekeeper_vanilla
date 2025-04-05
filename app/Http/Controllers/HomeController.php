@@ -13,12 +13,9 @@ use DB;
 use Illuminate\Http\Request;
 use Laravel\Socialite\Facades\Socialite;
 
-use App\Models\SitePage;
 use App\Models\Character\Character;
-
-use App\Services\LinkService;
 use App\Services\DeviantArtService;
-use App\Services\UserService;
+
 class HomeController extends Controller
 {
     /*
