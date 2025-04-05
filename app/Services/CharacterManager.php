@@ -2449,6 +2449,7 @@ class CharacterManager extends Service {
       $userAssets = createAssetsArray();
       $characterAssets = createAssetsArray(true);
 
+
       // Attach items. Technically, the user doesn't lose ownership of the item - we're just adding an additional holding field.
       // We're also not going to add logs as this might add unnecessary fluff to the logs and the items still belong to the user.
       // Perhaps later I'll add a way to locate items that are being held by updates/trades.
@@ -2463,7 +2464,6 @@ class CharacterManager extends Service {
           }
           $stack->update_count += $data['stack_quantity'][$stackId];
           $stack->save();
-
           addAsset($userAssets, $stack, $data['stack_quantity'][$stackId]);
         }
       }
@@ -2515,7 +2515,14 @@ class CharacterManager extends Service {
         'user' => Arr::only(getDataReadyAssets($userAssets), ['user_items', 'currencies']),
         'character' => Arr::only(getDataReadyAssets($characterAssets), ['currencies'])
       ]);
+            //make trait page red again once user changed items, so that they have to save again.
+            $request->has_features = false;
       $request->save();
+
+            //clear features that the character does not originally have or has been added via item.
+            $currentFeatureIds = array_merge($request->character->image->features->pluck("id")->toArray() ?? [], $request->getAttachedTraitIds());
+            if(count($currentFeatureIds) > 0) $request->features()->whereNotIn('feature_id', array_merge($currentFeatureIds, $request->getAttachedTraitIds()))->delete();
+            else $request->features()->delete();
 
       return $this->commitReturn(true);
     } catch (\Exception $e) {
@@ -2587,6 +2594,7 @@ class CharacterManager extends Service {
       }
       if ($subtype && $subtype->species_id != $species->id) {
         throw new \Exception('Subtype does not match the species.');
+
       }
       if ($transformation && $transformation->species_id != null) {
         if ($transformation->species_id != $species->id) {
@@ -2613,21 +2621,14 @@ class CharacterManager extends Service {
         // Comment out this check if rarities should have more berth for traits choice.
         //if($features[$featureId]->rarity->sort > $rarity->sort) continue;
 
-        // Skip the feature if it's not the correct species.
-        if (
-          $features[$featureId]->species_id &&
-          $features[$featureId]->species_id != $species->id
-        ) {
-          continue;
-        }
+                // Skip the feature if it's not the correct species.
+                if($features[$featureId]->species_id && $features[$featureId]->species_id != $species->id) continue;
 
-        $feature = CharacterFeature::create([
-          'character_image_id' => $request->id,
-          'feature_id' => $featureId,
-          'data' => $data['feature_data'][$key],
-          'character_type' => 'Update'
-        ]);
-      }
+                // check trait was on og character OR is in an item, otherwise skip
+                if(!$request->isAttachedOrOnCharacter($featureId)) continue;
+                if(!$request->features()->where('feature_id', $featureId)->count() > 0)
+                $feature = CharacterFeature::create(['character_image_id' => $request->id, 'feature_id' => $featureId, 'data' => $data['feature_data'][$key], 'character_type' => 'Update']);
+            }
 
       // Update other stats
       $request->species_id = $species->id;
