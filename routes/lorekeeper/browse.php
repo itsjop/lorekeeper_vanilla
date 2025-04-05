@@ -131,6 +131,12 @@ Route::group(['prefix' => 'shops'], function () {
   ]);
 });
 
+Route::group(['prefix' => __('dailies.dailies')], function() {
+    Route::get('/', 'DailyController@getIndex');
+    Route::get('{id}', 'DailyController@getDaily')->where(['id' => '[0-9]+']);
+});
+
+
 /**************************************************************************************************
 Site Pages
 **************************************************************************************************/
