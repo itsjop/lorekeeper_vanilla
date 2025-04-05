@@ -160,28 +160,21 @@
 
     </main>
 
-    <div
-      class="modal fade"
-      id="modal"
-      tabindex="-1"
-      role="dialog"
-    >
-      <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <span class="modal-title h5 mb-0">
-            </span>
-            <button
-              type="button"
-              class="close"
-              data-dismiss="modal"
-            >&times;</button>
-          </div>
-          <div class="modal-body">
-          </div>
+
+        @include('layouts._terms_modal')
+
+        <div class="modal fade" id="modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <span class="modal-title h5 mb-0"></span>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
 
     @yield('scripts')
     <script>

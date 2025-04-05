@@ -41,7 +41,7 @@ class User extends Authenticatable implements MustVerifyEmail {
     'has_alias',
     'avatar',
     'is_sales_unread',
-    'birthday'
+    'birthday', 'has_accepted_terms'
   ];
 
   /** The attributes that should be hidden for arrays.
