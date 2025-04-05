@@ -16,6 +16,7 @@ use App\Models\Species\Subtype;
 use App\Models\Feature\Feature;
 
 use App\Services\CharacterManager;
+use App\Models\Character\CharacterTransformation as Transformation;
 
 use App\Http\Controllers\Controller;
 
@@ -27,9 +28,12 @@ class CharacterImageController extends Controller {
     | Handles admin creation/editing of character images.
     */
 
-  /** Shows the add image page. Existing characters only, not MYO slots.
+  /**
+   * Shows the add image page. Existing characters only, not MYO slots.
+   *
    * @param  string  $slug
-   * @return \Illuminate\Contracts\Support\Renderable */
+   * @return \Illuminate\Contracts\Support\Renderable
+   */
   public function getNewImage($slug) {
     $this->character = Character::where('slug', $slug)->first();
     if (!$this->character) {
@@ -51,6 +55,13 @@ class CharacterImageController extends Controller {
           ->toArray(),
       'users' => User::query()->orderBy('name')->pluck('name', 'id')->toArray(),
       'features' => Feature::orderBy('name')->pluck('name', 'id')->toArray(),
+      'transformations' =>
+        ['0' => 'Select ' . ucfirst(__('transformations.transformation'))] +
+        Transformation::where('species_id', '=', $this->character->image->species_id)
+          ->orWhereNull('species_id')
+          ->orderBy('sort', 'DESC')
+          ->pluck('name', 'id')
+          ->toArray(),
       'isMyo' => false
     ]);
   }
@@ -70,92 +81,6 @@ class CharacterImageController extends Controller {
           ->toArray(),
       'subtype' => $id
     ]);
-  }
-
-  /** Creates a new image for a character.
-   * @param  \Illuminate\Http\Request       $request
-   * @param  App\Services\CharacterManager  $service
-   * @param  string                         $slug
-   * @return \Illuminate\Http\RedirectResponse */
-  public function postNewImage(Request $request, CharacterManager $service, $slug) {
-    $request->validate(CharacterImage::$createRules);
-    $data = $request->only([
-      'image',
-      'thumbnail',
-      'x0',
-      'x1',
-      'y0',
-      'y1',
-      'use_cropper',
-      'artist_url',
-      'artist_id',
-      'designer_url',
-      'designer_id',
-      'species_id',
-      'subtype_id',
-      'rarity_id',
-      'feature_id',
-      'feature_data',
-      'is_valid',
-      'is_visible'
-    ]);
-    $this->character = Character::where('slug', $slug)->first();
-    if (!$this->character) {
-      abort(404);
-    }
-    if ($service->createImage($data, $this->character, Auth::user())) {
-      flash('Image uploaded successfully.')->success();
-    } else {
-      foreach ($service->errors()->getMessages()['error'] as $error) {
-        flash($error)->error();
-      }
-      return redirect()->back()->withInput();
-    }
-    return redirect()->to($this->character->url . '/images');
-  }
-
-  /** Shows the edit image features modal.
-   * @param  int  $id
-   * @return \Illuminate\Contracts\Support\Renderable */
-  public function getEditImageFeatures($id) {
-    $image = CharacterImage::find($id);
-
-    return view('character.admin._edit_features_modal', [
-      'image' => $image,
-      'rarities' =>
-        ['0' => 'Select Rarity'] + Rarity::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
-      'specieses' =>
-        ['0' => 'Select Species'] +
-        Species::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
-      'subtypes' =>
-        ['0' => 'Select Subtype'] +
-        Subtype::where('species_id', '=', $image->species_id)
-          ->orderBy('sort', 'DESC')
-          ->pluck('name', 'id')
-          ->toArray(),
-      'features' => Feature::orderBy('name')->pluck('name', 'id')->toArray()
-    ]);
-  }
-
-  /** Edits the features of an image.
-   * @param  \Illuminate\Http\Request       $request
-   * @param  App\Services\CharacterManager  $service
-   * @param  int                            $id
-   * @return \Illuminate\Http\RedirectResponse */
-  public function postEditImageFeatures(Request $request, CharacterManager $service, $id) {
-    $data = $request->only(['species_id', 'subtype_id', 'rarity_id', 'feature_id', 'feature_data']);
-    $image = CharacterImage::find($id);
-    if (!$image) {
-      abort(404);
-    }
-    if ($service->updateImageFeatures($data, $image, Auth::user())) {
-      flash('Character traits edited successfully.')->success();
-    } else {
-      foreach ($service->errors()->getMessages()['error'] as $error) {
-        flash($error)->error();
-      }
-    }
-    return redirect()->back()->withInput();
   }
 
   /** Shows the edit image subtype portion of the modal
@@ -184,11 +109,184 @@ class CharacterImageController extends Controller {
     ]);
   }
 
-  /** Edits the features of an image.
+  /** Shows the edit image credits modal.
+   * @param  int  $id
+   * @return \Illuminate\Contracts\Support\Renderable */
+  public function getEditImageCredits($id) {
+    return view('character.admin._edit_credits_modal', [
+      'image' => CharacterImage::find($id),
+      'users' => User::query()->orderBy('name')->pluck('name', 'id')->toArray()
+    ]);
+  }
+
+  /** Sorts a character's images.
+   * @param  \Illuminate\Http\Request       $request
+   * @param  App\Services\CharacterManager  $service
+   * @param  string                         $slug
+   * @return \Illuminate\Http\RedirectResponse */
+
+  /**
+   * Shows the edit image transformation portion of the modal.
+   *
+   * @return \Illuminate\Contracts\Support\Renderable
+   */
+  public function getNewImageTransformation(Request $request) {
+    $species = $request->input('species');
+    $id = $request->input('id');
+    return view('character.admin._upload_image_transformation', [
+      'transformations' =>
+        ['0' => 'Select ' . ucfirst(__('transformations.transformation'))] +
+        Transformation::where('species_id', '=', $species)
+          ->orWhereNull('species_id')
+          ->orderBy('sort', 'DESC')
+          ->pluck('name', 'id')
+          ->toArray(),
+      'transformation' => $id
+    ]);
+  }
+
+  /**
+   * Creates a new image for a character.
+   *
+   * @param  \Illuminate\Http\Request       $request
+   * @param  App\Services\CharacterManager  $service
+   * @param  string                         $slug
+   * @return \Illuminate\Http\RedirectResponse
+   */
+  public function postNewImage(Request $request, CharacterManager $service, $slug) {
+    $request->validate(CharacterImage::$createRules);
+    $data = $request->only([
+      'image',
+      'thumbnail',
+      'x0',
+      'x1',
+      'y0',
+      'y1',
+      'use_cropper',
+      'artist_url',
+      'artist_id',
+      'designer_url',
+      'designer_id',
+      'species_id',
+      'subtype_id',
+      'rarity_id',
+      'feature_id',
+      'feature_data',
+      'is_valid',
+      'is_visible',
+      'transformation_id',
+      'transformation_info',
+      'transformation_description'
+    ]);
+    $this->character = Character::where('slug', $slug)->first();
+    if (!$this->character) {
+      abort(404);
+    }
+    if ($service->createImage($data, $this->character, Auth::user())) {
+      flash('Image uploaded successfully.')->success();
+    } else {
+      foreach ($service->errors()->getMessages()['error'] as $error) {
+        flash($error)->error();
+      }
+      return redirect()->back()->withInput();
+    }
+    return redirect()->to($this->character->url . '/images');
+  }
+
+  /**
+   * Shows the edit image features modal.
+   *
+   * @param  int  $id
+   * @return \Illuminate\Contracts\Support\Renderable
+   */
+  public function getEditImageFeatures($id) {
+    $image = CharacterImage::find($id);
+
+    return view('character.admin._edit_features_modal', [
+      'image' => $image,
+      'rarities' =>
+        ['0' => 'Select Rarity'] + Rarity::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
+      'specieses' =>
+        ['0' => 'Select Species'] +
+        Species::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
+      'subtypes' =>
+        ['0' => 'Select Subtype'] +
+        Subtype::where('species_id', '=', $image->species_id)
+          ->orderBy('sort', 'DESC')
+          ->pluck('name', 'id')
+          ->toArray(),
+      'features' => Feature::orderBy('name')->pluck('name', 'id')->toArray(),
+      'transformations' =>
+        ['0' => 'Select ' . ucfirst(__('transformations.transformation'))] +
+        Transformation::where('species_id', '=', $image->species_id)
+          ->orWhereNull('species_id')
+          ->orderBy('sort', 'DESC')
+          ->pluck('name', 'id')
+          ->toArray()
+    ]);
+  }
+
+  /**
+   * Edits the features of an image.
+   *
    * @param  \Illuminate\Http\Request       $request
    * @param  App\Services\CharacterManager  $service
    * @param  int                            $id
-   * @return \Illuminate\Http\RedirectResponse */
+   * @return \Illuminate\Http\RedirectResponse
+   */
+  public function postEditImageFeatures(Request $request, CharacterManager $service, $id) {
+    $data = $request->only([
+      'species_id',
+      'subtype_id',
+      'rarity_id',
+      'feature_id',
+      'feature_data',
+      'transformation_id',
+      'transformation_info',
+      'transformation_description'
+    ]);
+    $image = CharacterImage::find($id);
+    if (!$image) {
+      abort(404);
+    }
+    if ($service->updateImageFeatures($data, $image, Auth::user())) {
+      flash('Character traits edited successfully.')->success();
+    } else {
+      foreach ($service->errors()->getMessages()['error'] as $error) {
+        flash($error)->error();
+      }
+    }
+    return redirect()->back()->withInput();
+  }
+
+  /**
+   * Shows the edit image transformation portion of the modal.
+   *
+   * @return \Illuminate\Contracts\Support\Renderable
+   */
+  public function getEditImageTransformation(Request $request) {
+    $species = $request->input('species');
+    $id = $request->input('id');
+    return view('character.admin._edit_features_transformation', [
+      'image' => CharacterImage::find($id),
+      'transformations' =>
+        ['0' => 'Select ' . ucfirst(__('transformations.transformation'))] +
+        Transformation::where('species_id', '=', $species)
+          ->orWhereNull('species_id')
+          ->orderBy('sort', 'DESC')
+          ->pluck('name', 'id')
+          ->toArray()
+    ]);
+  }
+
+  /**
+   * Edits the features of an image.
+   *
+   * @param  \Illuminate\Http\Request       $request
+   * @param  App\Services\CharacterManager  $service
+   * @param  int                            $id
+   * @return \Illuminate\Http\RedirectResponse
+   */
   public function postEditImageNotes(Request $request, CharacterManager $service, $id) {
     $data = $request->only(['description']);
     $image = CharacterImage::find($id);
@@ -205,21 +303,14 @@ class CharacterImageController extends Controller {
     return redirect()->back();
   }
 
-  /** Shows the edit image credits modal.
-   * @param  int  $id
-   * @return \Illuminate\Contracts\Support\Renderable */
-  public function getEditImageCredits($id) {
-    return view('character.admin._edit_credits_modal', [
-      'image' => CharacterImage::find($id),
-      'users' => User::query()->orderBy('name')->pluck('name', 'id')->toArray()
-    ]);
-  }
-
-  /** Edits the credits of an image.
+  /**
+   * Edits the credits of an image.
+   *
    * @param  \Illuminate\Http\Request       $request
    * @param  App\Services\CharacterManager  $service
    * @param  int                            $id
-   * @return \Illuminate\Http\RedirectResponse */
+   * @return \Illuminate\Http\RedirectResponse
+   */
   public function postEditImageCredits(Request $request, CharacterManager $service, $id) {
     $data = $request->only(['artist_url', 'artist_id', 'designer_url', 'designer_id']);
     $image = CharacterImage::find($id);
@@ -236,20 +327,26 @@ class CharacterImageController extends Controller {
     return redirect()->back();
   }
 
-  /** Shows the reupload image modal.
+  /**
+   * Shows the reupload image modal.
+   *
    * @param  int  $id
-   * @return \Illuminate\Contracts\Support\Renderable */
+   * @return \Illuminate\Contracts\Support\Renderable
+   */
   public function getImageReupload($id) {
     return view('character.admin._reupload_image_modal', [
       'image' => CharacterImage::find($id)
     ]);
   }
 
-  /** Reuploads an image.
+  /**
+   * Reuploads an image.
+   *
    * @param  \Illuminate\Http\Request       $request
    * @param  App\Services\CharacterManager  $service
    * @param  int                            $id
-   * @return \Illuminate\Http\RedirectResponse */
+   * @return \Illuminate\Http\RedirectResponse
+   */
   public function postImageReupload(Request $request, CharacterManager $service, $id) {
     $data = $request->only(['image', 'thumbnail', 'x0', 'x1', 'y0', 'y1', 'use_cropper']);
     $image = CharacterImage::find($id);
@@ -266,11 +363,14 @@ class CharacterImageController extends Controller {
     return redirect()->back();
   }
 
-  /** Edits an image's settings.
+  /**
+   * Edits an image's settings.
+   *
    * @param  \Illuminate\Http\Request       $request
    * @param  App\Services\CharacterManager  $service
    * @param  int                            $id
-   * @return \Illuminate\Http\RedirectResponse */
+   * @return \Illuminate\Http\RedirectResponse
+   */
   public function postImageSettings(Request $request, CharacterManager $service, $id) {
     $data = $request->only(['is_valid', 'is_visible']);
     $image = CharacterImage::find($id);
@@ -287,20 +387,26 @@ class CharacterImageController extends Controller {
     return redirect()->back();
   }
 
-  /** Shows the set active image modal.
+  /**
+   * Shows the set active image modal.
+   *
    * @param  int  $id
-   * @return \Illuminate\Contracts\Support\Renderable */
+   * @return \Illuminate\Contracts\Support\Renderable
+   */
   public function getImageActive($id) {
     return view('character.admin._active_image_modal', [
       'image' => CharacterImage::find($id)
     ]);
   }
 
-  /** Sets an image to be the character's active image.
+  /**
+   * Sets an image to be the character's active image.
+   *
    * @param  \Illuminate\Http\Request       $request
    * @param  App\Services\CharacterManager  $service
    * @param  int                            $id
-   * @return \Illuminate\Http\RedirectResponse */
+   * @return \Illuminate\Http\RedirectResponse
+   */
   public function postImageActive(Request $request, CharacterManager $service, $id) {
     $image = CharacterImage::find($id);
     if (!$image) {
@@ -316,20 +422,26 @@ class CharacterImageController extends Controller {
     return redirect()->back();
   }
 
-  /** Shows the delete image modal.
+  /**
+   * Shows the delete image modal.
+   *
    * @param  int  $id
-   * @return \Illuminate\Contracts\Support\Renderable */
+   * @return \Illuminate\Contracts\Support\Renderable
+   */
   public function getImageDelete($id) {
     return view('character.admin._delete_image_modal', [
       'image' => CharacterImage::find($id)
     ]);
   }
 
-  /** Deletes an image.
+  /**
+   * Deletes an image.
+   *
    * @param  \Illuminate\Http\Request       $request
    * @param  App\Services\CharacterManager  $service
    * @param  int                            $id
-   * @return \Illuminate\Http\RedirectResponse */
+   * @return \Illuminate\Http\RedirectResponse
+   */
   public function postImageDelete(Request $request, CharacterManager $service, $id) {
     $image = CharacterImage::find($id);
     if (!$image) {
@@ -345,11 +457,14 @@ class CharacterImageController extends Controller {
     return redirect()->back();
   }
 
-  /** Sorts a character's images.
+  /**
+   * Sorts a character's images.
+   *
    * @param  \Illuminate\Http\Request       $request
    * @param  App\Services\CharacterManager  $service
    * @param  string                         $slug
-   * @return \Illuminate\Http\RedirectResponse */
+   * @return \Illuminate\Http\RedirectResponse
+   */
   public function postSortImages(Request $request, CharacterManager $service, $slug) {
     $this->character = Character::where('slug', $slug)->first();
     if (!$this->character) {
