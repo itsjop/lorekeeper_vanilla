@@ -175,6 +175,12 @@
                         <a class="dropdown-item" href="{{ url('shops') }}">
                             Shops
                         </a>
+                        @if(Auth::check())
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{{ url('search') }}">
+                            Site Search
+                        </a>
+                        @endif
                         <a class="dropdown-item" href="{{ url(__('dailies.dailies')) }}">
                         {{__('dailies.dailies')}}
                         </a>
