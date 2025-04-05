@@ -5,41 +5,47 @@ namespace App\Models\Item;
 use Config;
 use App\Models\Model;
 
-class ItemCategory extends Model {
-  /** The attributes that are mass assignable.
-   * @var array */
-  protected $fillable = [
-    'name',
-    'sort',
-    'has_image',
-    'description',
-    'parsed_description',
-    'is_character_owned',
-    'character_limit',
-    'can_name'
-  ];
+class ItemCategory extends Model
+{
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'name', 'sort', 'has_image', 'description', 'parsed_description', 'is_character_owned', 'character_limit', 'can_name', 'can_donate'
+    ];
 
-  /** The table associated with the model.
-   * @var string */
-  protected $table = 'item_categories';
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'item_categories';
 
-  /** Validation rules for creation.
-   * @var array */
-  public static $createRules = [
-    'name' => 'required|unique:item_categories|between:3,100',
-    'description' => 'nullable',
-    'image' => 'mimes:png'
-  ];
+    /**
+     * Validation rules for creation.
+     *
+     * @var array
+     */
+    public static $createRules = [
+        'name' => 'required|unique:item_categories|between:3,100',
+        'description' => 'nullable',
+        'image' => 'mimes:png',
+    ];
 
-  /** Validation rules for updating.
-   * @var array */
-  public static $updateRules = [
-    'name' => 'required|between:3,100',
-    'description' => 'nullable',
-    'image' => 'mimes:png'
-  ];
+    /**
+     * Validation rules for updating.
+     *
+     * @var array
+     */
+    public static $updateRules = [
+        'name' => 'required|between:3,100',
+        'description' => 'nullable',
+        'image' => 'mimes:png',
+    ];
 
-  /**********************************************************************************************
+    /**********************************************************************************************
 
         ACCESSORS
 
@@ -63,20 +69,26 @@ class ItemCategory extends Model {
     return $this->id . '-image.png';
   }
 
-  /** Gets the path to the file directory containing the model's image.
-   * @return string */
-  public function getCategoryImagePathAttribute() {
-    return public_path($this->imageDirectory);
-  }
-
-  /** Gets the URL of the model's image.
-   * @return string */
-  public function getCategoryImageUrlAttribute() {
-    if (!$this->has_image) {
-      return null;
+    /**
+     * Gets the path to the file directory containing the model's image.
+     *
+     * @return string
+     */
+    public function getCategoryImagePathAttribute()
+    {
+        return public_path($this->imageDirectory);
     }
-    return asset($this->imageDirectory . '/' . $this->categoryImageFileName);
-  }
+
+    /**
+     * Gets the URL of the model's image.
+     *
+     * @return string
+     */
+    public function getCategoryImageUrlAttribute()
+    {
+        if (!$this->has_image) return null;
+        return asset($this->imageDirectory . '/' . $this->categoryImageFileName);
+    }
 
   /** Gets the URL of the model's encyclopedia page.
    * @return string */

@@ -171,6 +171,9 @@ class InventoryController extends Controller {
         case 'resell':
           return $this->postResell($request, $service);
           break;
+        case 'donate':
+            return $this->postDonate($request, $service);
+            break;
         case 'act':
           return $this->postAct($request);
           break;
@@ -244,26 +247,41 @@ class InventoryController extends Controller {
     return redirect()->back();
   }
 
-  /** Sells an inventory stack.
-   * @param  \Illuminate\Http\Request       $request
-   * @param  App\Services\InventoryManager  $service
-   * @return \Illuminate\Http\RedirectResponse */
-  private function postResell(Request $request, InventoryManager $service) {
-    if (
-      $service->resellStack(
-        Auth::user(),
-        UserItem::find($request->get('ids')),
-        $request->get('quantities')
-      )
-    ) {
-      flash('Item sold successfully.')->success();
-    } else {
-      foreach ($service->errors()->getMessages()['error'] as $error) {
-        flash($error)->error();
-      }
+    /**
+     * Sells an inventory stack.
+     *
+     * @param  \Illuminate\Http\Request       $request
+     * @param  App\Services\InventoryManager  $service
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    private function postResell(Request $request, InventoryManager $service)
+    {
+        if($service->resellStack(Auth::user(), UserItem::find($request->get('ids')), $request->get('quantities'))) {
+            flash('Item sold successfully.')->success();
+        }
+        else {
+            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+        }
+        return redirect()->back();
     }
-    return redirect()->back();
-  }
+
+    /**
+     * Donates an inventory stack.
+     *
+     * @param  \Illuminate\Http\Request       $request
+     * @param  App\Services\InventoryManager  $service
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    private function postDonate(Request $request, InventoryManager $service)
+    {
+        if($service->donateStack(Auth::user(), UserItem::find($request->get('ids')), $request->get('quantities'))) {
+            flash('Item donated successfully.')->success();
+        }
+        else {
+            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+        }
+        return redirect()->back();
+    }
 
   /** Shows the inventory selection widget.
    * @param  int  $id

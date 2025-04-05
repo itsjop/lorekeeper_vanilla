@@ -25,6 +25,7 @@ class Kernel extends ConsoleKernel {
     $schedule->command('cycle-site-weather')->daily();
     $schedule->command('change-site-season')->everyMinute();
     $schedule->command('update-timed-daily')->everyMinute();
+    $schedule->command('clean-donations')->everyMinute();
     $schedule->command('change-featured-character')->weekly();
   }
 
